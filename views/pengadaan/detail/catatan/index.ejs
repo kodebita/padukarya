@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>
+    <%= title %> | PaduKarya
+  </title>
+  <%- include("../../../_style") %>
+</head>
+
+<body>
+  <div id="main-wrapper" data-theme="light" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full" data-sidebar-position="fixed" data-header-position="fixed" data-boxed-layout="full">
+    <%- include("../../../_header") %>
+    <%- include("../../../_sidebar") %>
+
+    <div class="page-wrapper">
+      <%- include("../_breadcrumb", {title: "Catatan Pengadaan", pengadaan: pengadaan}) %>
+      
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-3">
+            <%- include('../_sidebar', {page: 'catatan'}) %>
+          </div>
+          <div class="col-9">
+            <div class="card">
+              <div class="card-body">
+                <h4 style="font-weight: 500;">Catatan</h4>
+                <hr>
+                <div>
+                  <ul class="list-group list-group-flush">
+                    <li class="list-group-item">
+                      <div class="row">
+                        <div class="col-1">
+                          <div class="user-img">
+                            <img src="/assets/images/users/1.jpg" alt="user" class="img-fluid rounded-circle" width="40px"> <span class="profile-status online float-end"></span>
+                          </div>
+                        </div>
+                        <div class="col-11">
+                          <div class="d-flex mb-1">
+                            <p class="fw-bold mb-0 me-2">Semedo</p>
+                            <p class="mb-0">
+                              <i class="bi bi-pencil"></i> Edit
+                            </p>
+                          </div>
+                          <p class="mb-1">Lorem ipsum dolor sit amet consectetur adipisicing elit. Quis iste qui architecto reprehenderit ullam earum accusamus voluptatum expedita quam? Laudantium deleniti minima distinctio mollitia sunt laborum iste at quae qui.</p>
+                          <small class="text-muted">2024-01-01 22:00:00</small> 
+                        </div>
+                      </div>
+                    </li>
+                  </ul>
+                </div>
+                <hr>
+                <div class="mb-3">
+                  <textarea name="" id="" class="form-control" rows="3" placeholder="Tulis catatan..."></textarea>
+                </div>
+                <div class="d-flex justify-content-end">
+                  <button class="btn btn-dark">Simpan</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <%- include("../../../_script") %>
+  </div>
+</body>
+
+</html>

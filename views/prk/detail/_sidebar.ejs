@@ -1,0 +1,28 @@
+
+<ul class="list-group border-0">
+  <li class="list-group-item border-0 <% if(page == 'detail') { %> active <% } %>">
+    <a href="/prk/<%= prk._id %>">
+      <i class="bi bi-info-circle me-1"></i> Informasi
+    </a>
+  </li>
+  <li class="list-group-item border-0 <% if(page == 'jasa') { %> active <% } %>">
+    <a href="/prk/<%= prk._id %>/jasa">
+      <i class="bi bi-tools me-1"></i> RAB Jasa
+    </a>
+  </li>
+  <li class="list-group-item border-0 <% if(page == 'material') { %> active <% } %>">
+    <a href="/prk/<%= prk._id %>/material">
+      <i class="bi bi-lightbulb me-1"></i> RAB Material
+    </a>
+  </li>
+  <li class="list-group-item border-0 <% if(page == 'lampiran') { %> active <% } %>">
+    <a href="/prk/<%= prk._id %>/lampiran">
+      <i class="bi bi-paperclip me-1"></i> Lampiran
+    </a>
+  </li>
+  <li class="list-group-item border-0 <% if(page == 'catatan') { %> active <% } %>">
+    <a href="/prk/<%= prk._id %>/catatan">
+      <i class="bi bi-chat-dots me-1"></i> Catatan
+    </a>
+  </li>
+</ul>

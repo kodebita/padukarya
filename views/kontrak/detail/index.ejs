@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>
+    <%= title %> | PaduKarya
+  </title>
+  <%- include("../../_style") %>
+</head>
+
+<body>
+  <div id="main-wrapper" data-theme="light" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full" data-sidebar-position="fixed" data-header-position="fixed" data-boxed-layout="full">
+    <%- include("../../_header") %>
+    <%- include("../../_sidebar") %>
+
+    <div class="page-wrapper">
+      <%- include("_breadcrumb", {title: "Informasi Pengadaan", pengadaan: pengadaan}) %>
+      
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-3">
+            <%- include('_sidebar', {page: 'detail', pengadaan: pengadaan}) %>
+          </div>
+          <div class="col-9">
+            <div class="card">
+              <div class="card-body">
+                <h4 style="font-weight: 500;">Informasi</h4>
+                <hr>
+                <form action="">
+                  <div class="mb-4">
+                    <label for="" class="form-label">Tahun</label>
+                    <input type="number" name="" id="" class="form-control" style="max-width: 220px;" value="<%= pengadaan.tahun %>">
+                  </div>
+                  <div class="mb-4">
+                    <label for="" class="form-label">Basket</label>
+                    <select name="" id="" class="form-control" style="max-width: 220px;">
+                      <option value="">Pilih basket</option>
+                      <option value="1" <% if(pengadaan.basket == 1 ){ %> selected <% } %>>1</option>
+                      <option value="2" <% if(pengadaan.basket == 2 ){ %> selected <% } %>>2</option>
+                      <option value="3" <% if(pengadaan.basket == 3 ){ %> selected <% } %>>3</option>
+                    </select>
+                  </div>
+                  <div class="mb-4">
+                    <label for="" class="form-label">Nama Project</label>
+                    <textarea class="form-control" rows="2"><%= pengadaan.nama_project %></textarea>
+                  </div>
+                  <div class="mb-4">
+                    <label for="" class="form-label">Nodin</label>
+                    <input type="text" name="" id="" class="form-control" value="<%= pengadaan.nodin %>">
+                  </div>
+                  <div class="mb-4">
+                    <label for="" class="form-label">Tanggal Nodin</label>
+                    <input type="text" name="" id="" class="form-control" value="<%= pengadaan.tanggal_nodin %>">
+                  </div>
+                  <div class="mb-4">
+                    <label for="" class="form-label">Nomor PR Jasa</label>
+                    <input type="text" name="" id="" class="form-control" value="<%= pengadaan.nomor_pr_jasa %>">
+                  </div>
+                  <div class="mb-4">
+                    <label for="" class="form-label">Nomor PRK-SKKI</label>
+                    <input type="text" name="" id="" class="form-control" value="<%= pengadaan.nomor_prk_skki %>">
+                  </div>
+                  <div class="mb-4">
+                    <label for="" class="form-label">Status</label>
+                    <select name="" id="" class="form-control" style="max-width: 220px;">
+                      <option value="">Pilih status</option>
+                      <option value="proses" <% if(pengadaan.status == "proses") { %> selected <% } %>>Proses</option>
+                      <option value="selesai" <% if(pengadaan.status == "terkontrak") { %> selected <% } %>>Terkontrak</option>
+                    </select>
+                  </div>
+                  <div class="mb-4">
+                    <label for="" class="form-label">Tipe</label>
+                    <select name="" id="" class="form-control" style="max-width: 220px;">
+                      <option value="">Pilih tipe</option>
+                      <option value="murni" <% if(pengadaan.type == "murni") { %> selected <% } %>>Murni</option>
+                      <option value="turunan" <% if(pengadaan.type == "turunan") { %> selected <% } %>>Turunan</option>
+                    </select>
+                  </div>
+                  <hr>
+                  <div class="d-flex justify-content-end">
+                    <button class="btn btn-dark">Perbarui</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <%- include("../../_script") %>
+  </div>
+</body>
+
+</html>

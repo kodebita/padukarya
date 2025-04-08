@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>
+    <%= title %> | PaduKarya
+  </title>
+  <%- include("../../_style") %>
+</head>
+
+<body>
+  <div id="main-wrapper" data-theme="light" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full" data-sidebar-position="fixed" data-header-position="fixed" data-boxed-layout="full">
+    <%- include("../../_header") %>
+    <%- include("../../_sidebar") %>
+
+    <div class="page-wrapper">
+      <%- include("_breadcrumb", {title: "Informasi PRK", prk: prk}) %>
+      
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-3">
+            <%- include('_sidebar', {page: 'detail', prk: prk}) %>
+          </div>
+          <div class="col-9">
+            <div class="card">
+              <div class="card-body">
+                <h4 style="font-weight: 500;">Informasi</h4>
+                <hr>
+                <form action="">
+                  <div class="mb-4">
+                    <label for="" class="form-label">Tahun</label>
+                    <input type="number" name="" id="" class="form-control" style="max-width: 220px;" value="<%= prk.tahun %>">
+                  </div>
+                  <div class="mb-4">
+                    <label for="" class="form-label">Basket</label>
+                    <select name="" id="" class="form-control" style="max-width: 220px;">
+                      <option value="">Pilih basket</option>
+                      <option value="1" <% if(prk.basket == 1 ){ %> selected <% } %>>1</option>
+                      <option value="2" <% if(prk.basket == 2 ){ %> selected <% } %>>2</option>
+                      <option value="3" <% if(prk.basket == 3 ){ %> selected <% } %>>3</option>
+                    </select>
+                  </div>
+                  <div class="mb-4">
+                    <label for="" class="form-label">Nama Project</label>
+                    <textarea class="form-control" rows="2"><%= prk.nama_project %></textarea>
+                  </div>
+                  <div class="mb-4">
+                    <label for="" class="form-label">Nomor PRK</label>
+                    <input type="text" name="" id="" class="form-control" value="<%= prk.nomor_prk %>">
+                  </div>
+                  <div class="mb-4">
+                    <label for="" class="form-label">Tipe</label>
+                    <select name="" id="" class="form-control" style="max-width: 220px;">
+                      <option value="">Pilih tipe</option>
+                      <option value="murni" <% if(prk.type == "murni") { %> selected <% } %>>Murni</option>
+                      <option value="turunan" <% if(prk.type == "turunan") { %> selected <% } %>>Turunan</option>
+                    </select>
+                  </div>
+                  <div class="mb-4">
+                    <label for="" class="form-label">Lot</label>
+                    <input type="number" name="" id="" class="form-control" style="max-width: 220px;" value="<%= prk.nomor_lot %>">
+                  </div>
+                  <div class="mb-4">
+                    <label for="" class="form-label">Prioritas</label>
+                    <select name="" id="" class="form-control" style="max-width: 220px;">
+                      <option value="">Pilih prioritas</option>
+                      <option value="1" <% if(prk.prioritas == 1) { %> selected <% } %>>1</option>
+                      <option value="2" <% if(prk.prioritas == 2) { %> selected <% } %>>2</option>
+                      <option value="3" <% if(prk.prioritas == 3) { %> selected <% } %>>3</option>
+                      <option value="4" <% if(prk.prioritas == 4) { %> selected <% } %>>4</option>
+                    </select>
+                  </div>
+                  <hr>
+                  <div class="d-flex justify-content-end">
+                    <button class="btn btn-dark">Perbarui</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <%- include("../../_script") %>
+  </div>
+</body>
+
+</html>
