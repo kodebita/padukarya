@@ -5,7 +5,7 @@ const prkSchema = new mongoose.Schema({
   nama_project: String,
   nomor_lot: Number,
   prioritas: Number,
-  type: Number,
+  type: String,
   basket: Number,
   tahun: Number,
   prk_skki_id: mongoose.ObjectId,
