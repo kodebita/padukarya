@@ -3,8 +3,19 @@ const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 const path = require("path");
 
+const session = require('express-session');
+const flash = require('express-flash');
+
 const app = express();
 const PORT = 3000;
+
+app.use(session({
+  secret: 'your-secret-key',
+  resave: false,
+  saveUninitialized: true
+}));
+
+app.use(flash());
 
 app.set("view engine", "ejs"); // Set EJS as the view engine
 app.set("views", path.join(__dirname, "views")); // Set views directory
@@ -38,6 +49,8 @@ app.use("/prk", require("./routes/prk"));
 app.use("/skki", require("./routes/skki"));
 app.use("/pengadaan", require("./routes/pengadaan"));
 app.use("/kontrak", require("./routes/kontrak"));
+
+app.use("/material", require("./routes/material"));
 
 // Create User
 app.get("/users", async (req, res) => {
