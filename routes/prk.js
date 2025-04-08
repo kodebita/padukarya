@@ -1,5 +1,12 @@
 const express = require("express");
 const router = express.Router();
+const Tokens = require('csrf')
+const { body, validationResult } = require('express-validator');
+const formatError = require('../helper/error-formatter');
+
+// generate token
+const tokens = new Tokens();
+const secret = tokens.secretSync();
 
 // Model
 const Prk = require("../models/prk");
@@ -7,6 +14,7 @@ const PrkMaterial = require("../models/prkMaterial");
 const PrkJasa = require("../models/prkJasa");
 const PrkLampiran = require("../models/prkLampiran");
 const PrkCatatan = require("../models/prkCatatan");
+const Material = require("../models/material");
 
 router.get("/", async (req, res) => {
   try {
@@ -46,17 +54,168 @@ router.get("/", async (req, res) => {
   }
 });
 
+router.get("/baru", async (req, res) => {
+  const token = tokens.create(secret);
+
+  res.render("prk/create", {
+    title: "PRK Baru",
+    token: token,
+    data: {
+      tahun: new Date().getFullYear(),
+    },
+    errors: req.flash('errors')[0] || {},
+    old: req.flash('old')[0] || {}
+  });
+});
+
+router.post("/baru",
+  [
+    body("tahun")
+      .notEmpty().withMessage("Tahun tidak boleh kosong")
+      .isNumeric().withMessage('Tahun harus berupa angka'),
+    body("basket")
+      .notEmpty().withMessage("Basket tidak boleh kosong")
+      .isNumeric().withMessage('Basket harus berupa angka')
+      .isIn([1, 2, 3]).withMessage('Basket harus 1, 2,  atau 3'),
+    body("nama_project").notEmpty().withMessage("Nama Project tidak boleh kosong"),
+    body("nomor_prk").notEmpty().withMessage("Nomor PRK tidak boleh kosong"), 
+    body("type")
+      .notEmpty().withMessage("Tipe tidak boleh kosong")
+      .isIn(['murni', 'turunan']).withMessage('Tipe harus murni atau turunan'),
+    body("nomor_lot").notEmpty().withMessage("Nomor Lot tidak boleh kosong"),
+    body("prioritas")
+      .notEmpty().withMessage("Prioritas tidak boleh kosong")
+      .isIn([1, 2, 3, 4]).withMessage('Prioritas harus 1, 2, 3 atau 4'),
+  ],
+  async (req, res) => {
+    try {
+      const errors = validationResult(req);
+  
+      if (!errors.isEmpty()) {
+        req.flash('errors', formatError(errors.array()));
+        req.flash('old', req.body);
+        return res.redirect('/prk/baru');
+      }
+  
+      const { 
+        tahun,
+        basket,
+        nama_project,
+        nomor_prk,
+        type,
+        nomor_lot,
+        prioritas,
+        token
+      } = req.body;
+  
+      if (!tokens.verify(secret, token)) {
+        throw new Error('invalid token!')
+      }
+  
+      const prk = new Prk({
+        tahun: tahun,
+        basket: basket,
+        nama_project: nama_project,
+        nomor_prk: nomor_prk,
+        type: type,
+        nomor_lot: nomor_lot,
+        prioritas: prioritas,
+      });
+  
+      await prk.save();
+  
+      res.redirect("/prk");
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  }
+);
+
 router.get("/:id", async (req, res) => {
   try {
+    const token = tokens.create(secret)
+
     const prk = await Prk.findOne({ _id: req.params.id }).lean();
 
     res.render("prk/detail/index", {
       title: "Informasi PRK",
       prk: prk,
+      token: token,
+      errors: req.flash('errors')[0] || {},
+      old: req.flash('old')[0] || {},
+      toast: req.flash('toast')[0] || false,
     });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
+});
+
+router.post("/:id",
+  [
+    body("tahun")
+      .notEmpty().withMessage("Tahun tidak boleh kosong")
+      .isNumeric().withMessage('Tahun harus berupa angka'),
+    body("basket")
+      .notEmpty().withMessage("Basket tidak boleh kosong")
+      .isNumeric().withMessage('Basket harus berupa angka')
+      .isIn([1, 2, 3]).withMessage('Basket harus 1, 2,  atau 3'),
+    body("nama_project").notEmpty().withMessage("Nama Project tidak boleh kosong"),
+    body("nomor_prk").notEmpty().withMessage("Nomor PRK tidak boleh kosong"), 
+    body("type")
+      .notEmpty().withMessage("Tipe tidak boleh kosong")
+      .isIn(['murni', 'turunan']).withMessage('Tipe harus murni atau turunan'),
+    body("nomor_lot").notEmpty().withMessage("Nomor Lot tidak boleh kosong"),
+    body("prioritas")
+      .notEmpty().withMessage("Prioritas tidak boleh kosong")
+      .isIn([1, 2, 3, 4]).withMessage('Prioritas harus 1, 2, 3 atau 4'),
+  ],
+  async (req, res) => {
+    const id = req.params.id;
+
+    try {
+      const errors = validationResult(req);
+
+      if (!errors.isEmpty()) {
+        req.flash('errors', formatError(errors.array()));
+        req.flash('old', req.body);
+        return res.redirect('/prk/' + id);
+      }
+
+      const { token } = req.body;
+
+      if (!tokens.verify(secret, token)) {
+        throw new Error('invalid token!')
+      }
+
+      const updateData = {
+        ...req.body,
+        updated_at: new Date().toISOString(), // auto-update updated_at
+      };
+
+      const updatedPrk = await Prk.findByIdAndUpdate(id, updateData, {
+        new: true, // return updated document
+        runValidators: true,
+      });
+
+      if (!updatedPrk) {
+        req.flash('toast', {
+          success: false,
+          message: 'PRK tidak ditemukan'
+        });
+        res.redirect("/prk/" + id);
+      }
+
+      // success
+      req.flash('toast', req.flash('toast', {
+        success: true,
+        message: 'PRK berhasil diperbarui'
+      }));
+
+      // redirect to the same page
+      res.redirect("/prk/" + id);
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
 });
 
 router.get("/:id/jasa", async (req, res) => {
@@ -69,10 +228,179 @@ router.get("/:id/jasa", async (req, res) => {
       title: "RAB Jasa PRK",
       prk: prk,
       jasas: jasas,
+      toast: req.flash('toast')[0] || false,
     });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
+});
+
+router.get("/:id/jasa/baru", async (req, res) => {
+  try {
+    const token = tokens.create(secret);
+    const prk = await Prk.findOne({ _id: req.params.id }).lean();
+
+    res.render("prk/detail/jasa/create", {
+      title: "RAB Jasa PRK",
+      prk: prk,
+      token: token,
+      errors: req.flash('errors')[0] || {},
+      old: req.flash('old')[0] || {},
+      toast: req.flash('toast')[0] || false,
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+})
+
+router.post("/:id/jasa/baru",
+  [
+    body("nama_jasa")
+      .notEmpty().withMessage("Nama Jasa tidak boleh kosong"),
+    body("harga")
+      .notEmpty().withMessage("Nominal tidak boleh kosong")
+      .isNumeric().withMessage('Nominal harus berupa angka'),
+  ],
+  async (req, res) => {
+    try {
+      const errors = validationResult(req);
+  
+      if (!errors.isEmpty()) {
+        req.flash('errors', formatError(errors.array()));
+        req.flash('old', req.body);
+        return res.redirect('/prk/'+req.params.id+'/jasa/baru');
+      }
+  
+      const { 
+        nama_jasa,
+        harga,
+        token
+      } = req.body;
+  
+      if (!tokens.verify(secret, token)) {
+        throw new Error('invalid token!')
+      }
+  
+      const prkJasa = new PrkJasa({
+        prk_id: req.params.id,
+        nama_jasa: nama_jasa,
+        harga: harga,
+      });
+  
+      await prkJasa.save();
+  
+      res.redirect("/prk/"+req.params.id+"/jasa");
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  }
+);
+
+router.get("/:id/jasa/:jasaId", async (req, res) => {
+  try {
+    const token = tokens.create(secret);
+    const prk = await Prk.findOne({ _id: req.params.id }).lean();
+    const jasa = await PrkJasa.findOne({ _id: req.params.jasaId }).lean();
+
+    res.render("prk/detail/jasa/detail", {
+      title: "RAB Jasa PRK",
+      prk: prk,
+      jasa: jasa,
+      token: token,
+      errors: req.flash('errors')[0] || {},
+      old: req.flash('old')[0] || {},
+      toast: req.flash('toast')[0] || false,
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+router.post("/:id/jasa/:jasaId",
+  [
+    body("nama_jasa")
+      .notEmpty().withMessage("Nama Jasa tidak boleh kosong"),
+    body("harga")
+      .notEmpty().withMessage("Nominal tidak boleh kosong")
+      .isNumeric().withMessage('Nominal harus berupa angka'),
+  ],
+  async (req, res) => {
+    const id = req.params.id;
+    const jasaId = req.params.jasaId;
+
+    try {
+      const errors = validationResult(req);
+
+      if (!errors.isEmpty()) {
+        req.flash('errors', formatError(errors.array()));
+        req.flash('old', req.body);
+
+        return res.redirect('/prk/' + id + '/jasa' + jasaId);
+      }
+
+      const { token } = req.body;
+
+      if (!tokens.verify(secret, token)) {
+        throw new Error('invalid token!')
+      }
+
+      const updateData = {
+        ...req.body,
+        updated_at: new Date().toISOString(), // auto-update updated_at
+      };
+
+      const updatedPrkJasa = await PrkJasa.findByIdAndUpdate(jasaId, updateData, {
+        new: true, // return updated document
+        runValidators: true,
+      });
+
+      if (!updatedPrkJasa) {
+        req.flash('toast', {
+          success: false,
+          message: 'Terjadi kesalahan'
+        });
+        res.redirect("/prk/" + id + '/jasa/' + jasaId);
+      }
+
+      // success
+      req.flash('toast', req.flash('toast', {
+        success: true,
+        message: 'Jasa berhasil diperbarui'
+      }));
+
+      // redirect to the same page
+      res.redirect("/prk/" + id + '/jasa');
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+});
+
+router.get("/:id/jasa/:jasaId/hapus",
+  async (req, res) => {
+    const id = req.params.id;
+    const jasaId = req.params.jasaId;
+
+    try {
+      const deletedPrkJasa = await PrkJasa.findByIdAndDelete(jasaId);
+
+      if (!deletedPrkJasa) {
+        req.flash('toast', req.flash('toast', {
+          success: false,
+          message: 'Terjadi kesalahan'
+        }));
+      } else {
+        // success
+        req.flash('toast', req.flash('toast', {
+          success: true,
+          message: 'Jasa berhasil dihapus'
+        }));
+      }
+
+      // redirect to the same page
+      res.redirect("/prk/" + id + '/jasa');
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
 });
 
 router.get("/:id/material", async (req, res) => {
@@ -85,10 +413,129 @@ router.get("/:id/material", async (req, res) => {
       title: "RAB Material PRK",
       prk: prk,
       materials: materials,
+      toast: req.flash('toast')[0] || false,
     });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
+});
+
+router.get("/:id/material/baru", async (req, res) => {
+  try {
+    const token = tokens.create(secret);
+    const prk = await Prk.findOne({ _id: req.params.id }).lean();
+
+    res.render("prk/detail/material/create", {
+      title: "RAB Material PRK",
+      prk: prk,
+      token: token,
+      errors: req.flash('errors')[0] || {},
+      old: req.flash('old')[0] || {},
+      toast: req.flash('toast')[0] || false,
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+router.post("/:id/material/baru",
+  [
+    body("material_id")
+      .notEmpty().withMessage("Material tidak boleh kosong"),
+    body("harga")
+      .notEmpty().withMessage("Harga tidak boleh kosong")
+      .customSanitizer(value => {
+        return parseFloat(value.replace(/,/g, '')); // remove commas and convert to float
+      })
+      .isFloat({min: 1}).withMessage('Harga tidak valid'),
+    body("jumlah")
+      .notEmpty().withMessage("Jumlah tidak boleh kosong")
+      .customSanitizer(value => {
+        return parseFloat(value.replace(/,/g, '')); // remove commas and convert to float
+      })
+      .isFloat({min: 1}).withMessage('Jumlah tidak valid'),
+  ],
+  async (req, res) => {
+    try {
+      const errors = validationResult(req);
+  
+      if (!errors.isEmpty()) {
+        req.flash('errors', formatError(errors.array()));
+        req.flash('old', req.body);
+        return res.redirect('/prk/'+req.params.id+'/material/baru');
+      }
+  
+      const { 
+        material_id,
+        harga,
+        jumlah,
+        token
+      } = req.body;
+  
+      if (!tokens.verify(secret, token)) {
+        throw new Error('invalid token!')
+      }
+
+      // validate material_id
+      const material = await Material.findOne({ _id: material_id }).lean();
+      if (!material) {
+        req.flash('errors', {
+          msg: 'Material tidak ditemukan',
+          param: 'material_id',
+        });
+        req.flash('old', req.body);
+        return res.redirect('/prk/'+req.params.id+'/material/baru');
+      }
+  
+      const prkMaterial = new PrkMaterial({
+        prk_id: req.params.id,
+        kode_normalisasi: material.kode_normalisasi,
+        nama_material: material.nama_material,
+        satuan: material.satuan,
+        harga: harga,
+        jumlah: jumlah,
+      });
+  
+      await prkMaterial.save();
+
+      req.flash('toast', req.flash('toast', {
+        success: true,
+        message: 'Material berhasil ditambahkan'
+      }));
+  
+      res.redirect("/prk/"+req.params.id+"/material");
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  }
+);
+
+router.get("/:id/material/:materialId/hapus",
+  async (req, res) => {
+    const id = req.params.id;
+    const materialId = req.params.materialId;
+
+    try {
+      const deletedPrkMaterial = await PrkMaterial.findByIdAndDelete(materialId);
+
+      if (!deletedPrkMaterial) {
+        req.flash('toast', req.flash('toast', {
+          success: false,
+          message: 'Terjadi kesalahan'
+        }));
+      } else {
+        // success
+        req.flash('toast', req.flash('toast', {
+          success: true,
+          message: 'Material berhasil dihapus'
+        }));
+      }
+
+      // redirect to the same page
+      res.redirect("/prk/" + id + '/material');
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
 });
 
 router.get("/:id/lampiran", async (req, res) => {

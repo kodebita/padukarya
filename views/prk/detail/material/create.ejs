@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>
+    <%= title %> | PaduKarya
+  </title>
+  <%- include("../../../_style") %>
+</head>
+
+<body>
+  <div id="main-wrapper" data-theme="light" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full" data-sidebar-position="fixed" data-header-position="fixed" data-boxed-layout="full">
+    <%- include("../../../_header") %>
+    <%- include("../../../_sidebar") %>
+
+    <div class="page-wrapper">
+      <%- include("../_breadcrumb", {title: "Input Material Baru pada PRK", prk: prk}) %>
+      
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-3">
+            <%- include('../_sidebar', {page: 'material'}) %>
+          </div>
+          <div class="col-9">
+            <div class="card">
+              <div class="card-body">
+                <div class="d-flex justify-content-between">
+                  <h4 style="font-weight: 500;">Material baru</h4>
+                  <a href="/prk/<%= prk._id %>/material" class="btn btn-dark" style="color: white !important;">Kembali</a>
+                </div>
+
+                <hr>
+
+                <form action="/prk/<%= prk._id %>/material/baru" method="POST">
+                  <input type="hidden" name="token" value="<%= token %>">
+                  
+                  <div class="mb-4">
+                    <label for="" class="form-label">Material</label>
+                    <select class="form-select" name="material_id" id="single-select-field" data-placeholder="Cari Material"></select>
+
+                    <% if(errors) { %>
+                      <div class="text-danger mt-2 text-sm">
+                        <%= errors.material_id %>
+                      </div>
+                    <% } %>
+                  </div>
+                  
+                  <div class="mb-4">
+                    <label for="" class="form-label">Harga</label>
+                    <div class="input-group mb-3" style="max-width: 320px;">
+                      <span class="input-group-text" id="basic-addon1">Rp</span>
+                      <input type="text" class="form-control form-control-number" id="hargaMaterial" onblur="formatNumber(this, true)" onfocus="unformatNumber(this, true)" name="harga" value="0" aria-describedby="basic-addon1">
+                      <span class="input-group-text" id="satuanMaterial">/pcs</span>
+                    </div>
+                    <% if(errors) { %>
+                      <div class="text-danger mt-2 text-sm">
+                        <%= errors.harga %>
+                      </div>
+                    <% } %>
+                  </div>
+
+                  <div class="mb-4">
+                    <label for="" class="form-label">Jumlah</label>
+                    <div class="input-group mb-3" style="max-width: 220px;">
+                      <input type="text" class="form-control form-control-number" onblur="formatNumber(this)" onfocus="unformatNumber(this)" name="jumlah" aria-describedby="basic-addon1">
+                      <span class="input-group-text" id="satuanMaterial2">pcs</span>
+                    </div>
+                    <% if(errors) { %>
+                      <div class="text-danger mt-2 text-sm">
+                        <%= errors.jumlah %>
+                      </div>
+                    <% } %>
+                  </div>
+
+                  <div class="mb-4">
+                    <label for="" class="form-label">Subtotal</label>
+                    <div class="input-group mb-3" style="max-width: 320px;">
+                      <span class="input-group-text">Rp</span>
+                      <input type="text" name="subtotal" class="form-control form-control-number" disabled value="0" aria-describedby="basic-addon1">
+                    </div>
+                  </div>
+                  
+                  <hr>
+                  <div class="d-flex justify-content-end">
+                    <button class="btn btn-dark">Simpan</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <%- include("../../../_script") %>
+    <script>
+      
+      $(document).ready(function() {
+        $('#data_table').DataTable();
+
+        $('#single-select-field').select2({
+          theme: "bootstrap-5",
+          width: $( this ).data( 'width' ) ? $( this ).data( 'width' ) : $( this ).hasClass( 'w-100' ) ? '100%' : 'style',
+          placeholder: $( this ).data( 'placeholder' ),
+          ajax: {
+            url: '/material/json',
+            data: function (params) {
+              var query = {
+                search: params.term,
+                type: 'public'
+              }
+              return query;
+            },
+            processResults: function (data) {
+              return {
+                results: data.data.map(function (item) {
+                  return {
+                    id: item._id,
+                    text: "[" + item.kode_normalisasi + "]" + item.nama_material
+                  }
+                })
+              };
+            }
+          }
+        });
+
+        $('#single-select-field').on('select2:select', function (e) {
+          var data = e.params.data;
+          $.get('/material/' + data.id + '/json', function (result) {
+            $('#hargaMaterial').val(result.data.harga);
+            $('#satuanMaterial').text('/' + result.data.satuan);
+            $('#satuanMaterial2').text(result.data.satuan);
+
+            formatNumber(document.getElementById('hargaMaterial'));
+          }); 
+        });
+
+        $('input[name=harga]').on('input', function() {
+          const harga = parseFloat($(this).val().replace(/,/g, ''));
+          const jumlah = parseFloat($('input[name=jumlah]').val().replace(/,/g, ''));
+          const subtotal = harga * jumlah;
+
+          $('input[name=subtotal]').val(subtotal.toLocaleString('en-US', {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 4
+          }));
+        });
+
+        $('input[name=jumlah]').on('input', function() {
+          const harga = parseFloat($('input[name=harga]').val().replace(/,/g, ''));
+          const jumlah = parseFloat($(this).val().replace(/,/g, ''));
+          const subtotal = harga * jumlah;
+
+          $('input[name=subtotal]').val(subtotal.toLocaleString('en-US', {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 4
+          }));
+        });
+      });
+    </script>
+  </div>
+</body>
+
+</html>
