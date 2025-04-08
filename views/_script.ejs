@@ -13,3 +13,44 @@
 <script src="/assets/extra-libs/jvector/jquery-jvectormap-world-mill-en.js"></script>
 <script src="/assets/extra-libs/datatables.net/js/jquery.dataTables.min.js"></script>
 <script src="/assets/extra-libs/datatables.net-bs4/js/dataTables.responsive.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.full.min.js"></script>
+<% if(typeof(toast) != 'undefined' && toast) { %>
+  <script>
+    $(document).ready(function() {
+      $('#toastIcon').attr('class', "<% if(toast.success) { %>bi bi-check-circle<% } else { %>bi bi-x-circle<% } %>");
+      $('#toastTitle').html("<%= toast.success ? 'Berhasil' : 'Error' %>")
+      $('#toastBody').html("<%= toast.message %>");
+      bootstrap.Toast.getOrCreateInstance($('#toast')).show()
+    })
+  </script>
+<% } %>
+<script>
+  function formatNumberInput(el) {
+    const val = parseFloat(el.val());
+
+    if (!isNaN(val)) {
+      el.val(val.toLocaleString('en-US', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 4
+      }));
+    }
+  }
+
+  function formatNumber(el, fraction = false) {
+    const raw = parseFloat(el.value);
+    if (!isNaN(raw)) {
+      if(fraction) {
+        el.value = raw.toLocaleString('en-US', {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 4
+        });
+      } else {
+        el.value = raw.toLocaleString('en-US');
+      }
+    }
+  }
+
+  function unformatNumber(el) {
+    el.value = el.value.replace(/,/g, '');
+  }
+</script>
