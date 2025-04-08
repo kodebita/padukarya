@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 const prkMaterialSchema = new mongoose.Schema({
   kode_normalisasi: String,
   nama_material: String,
-  satuan: Number,
+  satuan: String,
   harga: Number,
   jumlah: String,
   prk_id: mongoose.ObjectId,
