@@ -14,6 +14,7 @@
   <div id="main-wrapper" data-theme="light" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full" data-sidebar-position="fixed" data-header-position="fixed" data-boxed-layout="full">
     <%- include("../../../_header") %>
     <%- include("../../../_sidebar") %>
+    <%- include("../../../_toast") %>
 
     <div class="page-wrapper">
       <%- include("../_breadcrumb", {title: "Input Material Baru pada PRK", prk: prk}) %>
@@ -35,11 +36,12 @@
 
                 <hr>
 
-                <form action="/prk/<%= prk._id %>/material/baru" method="POST">
+                <form action="/prk/<%= prk._id %>/material/<%= material._id %>" method="POST">
                   <input type="hidden" name="token" value="<%= token %>">
                   
                   <div class="mb-4">
                     <label for="" class="form-label">Material</label>
+                    <input type="hidden" name="initial_material_id" value="<%= material.material_id %>">
                     <select class="form-select" name="material_id" id="single-select-field" data-placeholder="Cari Material"></select>
 
                     <% if(errors) { %>
@@ -53,7 +55,7 @@
                     <label for="" class="form-label">Harga</label>
                     <div class="input-group mb-3" style="max-width: 320px;">
                       <span class="input-group-text" id="basic-addon1">Rp</span>
-                      <input type="text" class="form-control form-control-number" id="hargaMaterial" onblur="formatNumber(this, true)" onfocus="unformatNumber(this, true)" name="harga" value="0" aria-describedby="basic-addon1">
+                      <input type="text" class="form-control form-control-number" id="hargaMaterial" onblur="formatNumber(this, true)" onfocus="unformatNumber(this, true)" name="harga" value="<%= material.harga %>" aria-describedby="basic-addon1">
                       <span class="input-group-text" id="satuanMaterial">/pcs</span>
                     </div>
                     <% if(errors) { %>
@@ -66,7 +68,7 @@
                   <div class="mb-4">
                     <label for="" class="form-label">Jumlah</label>
                     <div class="input-group mb-3" style="max-width: 220px;">
-                      <input type="text" class="form-control form-control-number" onblur="formatNumber(this)" onfocus="unformatNumber(this)" name="jumlah" aria-describedby="basic-addon1">
+                      <input id="jumlahMaterial" type="text" class="form-control form-control-number" onblur="formatNumber(this)" onfocus="unformatNumber(this)" name="jumlah" value="<%= material.jumlah %>" aria-describedby="basic-addon1">
                       <span class="input-group-text" id="satuanMaterial2">pcs</span>
                     </div>
                     <% if(errors) { %>
@@ -80,7 +82,7 @@
                     <label for="" class="form-label">Subtotal</label>
                     <div class="input-group mb-3" style="max-width: 320px;">
                       <span class="input-group-text">Rp</span>
-                      <input type="text" name="subtotal" class="form-control form-control-number" disabled value="0" aria-describedby="basic-addon1">
+                      <input id="subtotalMaterial" type="text" name="subtotal" class="form-control form-control-number" disabled value="0" aria-describedby="basic-addon1">
                     </div>
                   </div>
                   
@@ -128,8 +130,24 @@
           }
         });
 
+        // Set initial value
+        const initialData = {
+          id: "<%= material.material_id %>",
+          text: "<%= "[" + material.kode_normalisasi + "]" + material.nama_material %>",
+        };
+
+        const $select = $('#single-select-field');
+
+        // Create the option and append it
+        const option = new Option(initialData.text, initialData.id, true, true);
+        $select.append(option).trigger('change');
+
         $('#single-select-field').on('select2:select', function (e) {
           var data = e.params.data;
+          if(data.id == $('input[name=initial_material_id]').val()) {
+            return;
+          }
+
           $.get('/material/' + data.id + '/json', function (result) {
             $('#hargaMaterial').val(result.data.harga);
             $('#satuanMaterial').text('/' + result.data.satuan);
@@ -160,6 +178,11 @@
             maximumFractionDigits: 4
           }));
         });
+
+        formatNumber(document.getElementById('hargaMaterial'), true);
+        formatNumber(document.getElementById('jumlahMaterial'));
+        
+        $('#jumlahMaterial').trigger('input');
       });
     </script>
   </div>

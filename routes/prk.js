@@ -122,9 +122,9 @@ router.post("/baru",
         prioritas: prioritas,
       });
   
-      await prk.save();
+      const save = await prk.save();
   
-      res.redirect("/prk");
+      res.redirect("/prk/"+save._id);
     } catch (error) {
       res.status(500).json({ error: error.message });
     }
@@ -259,6 +259,9 @@ router.post("/:id/jasa/baru",
       .notEmpty().withMessage("Nama Jasa tidak boleh kosong"),
     body("harga")
       .notEmpty().withMessage("Nominal tidak boleh kosong")
+      .customSanitizer(value => {
+        return parseFloat(value.replace(/,/g, '')); // remove commas and convert to float
+      })
       .isNumeric().withMessage('Nominal harus berupa angka'),
   ],
   async (req, res) => {
@@ -283,7 +286,7 @@ router.post("/:id/jasa/baru",
   
       const prkJasa = new PrkJasa({
         prk_id: req.params.id,
-        nama_jasa: nama_jasa,
+        nama_jasa: nama_jasa.trim(),
         harga: harga,
       });
   
@@ -316,15 +319,16 @@ router.get("/:id/jasa/:jasaId", async (req, res) => {
   }
 });
 
-router.post("/:id/jasa/:jasaId",
-  [
+router.post("/:id/jasa/:jasaId", [
     body("nama_jasa")
       .notEmpty().withMessage("Nama Jasa tidak boleh kosong"),
     body("harga")
       .notEmpty().withMessage("Nominal tidak boleh kosong")
+      .customSanitizer(value => {
+        return parseFloat(value.replace(/,/g, '')); // remove commas and convert to float
+      })
       .isNumeric().withMessage('Nominal harus berupa angka'),
-  ],
-  async (req, res) => {
+  ], async (req, res) => {
     const id = req.params.id;
     const jasaId = req.params.jasaId;
 
@@ -335,17 +339,18 @@ router.post("/:id/jasa/:jasaId",
         req.flash('errors', formatError(errors.array()));
         req.flash('old', req.body);
 
-        return res.redirect('/prk/' + id + '/jasa' + jasaId);
+        return res.redirect('/prk/' + id + '/jasa/' + jasaId);
       }
 
-      const { token } = req.body;
+      const { token, nama_jasa, harga } = req.body;
 
       if (!tokens.verify(secret, token)) {
         throw new Error('invalid token!')
       }
 
       const updateData = {
-        ...req.body,
+        nama_jasa: nama_jasa.trim(),
+        harga: harga,
         updated_at: new Date().toISOString(), // auto-update updated_at
       };
 
@@ -369,14 +374,13 @@ router.post("/:id/jasa/:jasaId",
       }));
 
       // redirect to the same page
-      res.redirect("/prk/" + id + '/jasa');
+      res.redirect("/prk/" + id + '/jasa/' + jasaId);
     } catch (error) {
       res.status(500).json({ error: error.message });
     }
 });
 
-router.get("/:id/jasa/:jasaId/hapus",
-  async (req, res) => {
+router.get("/:id/jasa/:jasaId/hapus", async (req, res) => {
     const id = req.params.id;
     const jasaId = req.params.jasaId;
 
@@ -489,6 +493,7 @@ router.post("/:id/material/baru",
   
       const prkMaterial = new PrkMaterial({
         prk_id: req.params.id,
+        material_id: material._id,
         kode_normalisasi: material.kode_normalisasi,
         nama_material: material.nama_material,
         satuan: material.satuan,
@@ -504,6 +509,107 @@ router.post("/:id/material/baru",
       }));
   
       res.redirect("/prk/"+req.params.id+"/material");
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  }
+);
+
+router.get("/:id/material/:materialId", async (req, res) => {
+  try {
+    const token = tokens.create(secret);
+    const prk = await Prk.findOne({ _id: req.params.id }).lean();
+    const material = await PrkMaterial.findOne({ _id: req.params.materialId }).lean();
+
+    res.render("prk/detail/material/detail", {
+      title: "RAB Material PRK",
+      prk: prk,
+      material: material,
+      token: token,
+      errors: req.flash('errors')[0] || {},
+      old: req.flash('old')[0] || {},
+      toast: req.flash('toast')[0] || false,
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+router.post("/:id/material/:materialId",
+  [
+    body("material_id")
+      .notEmpty().withMessage("Material tidak boleh kosong"),
+    body("harga")
+      .notEmpty().withMessage("Harga tidak boleh kosong")
+      .customSanitizer(value => {
+        return parseFloat(value.replace(/,/g, '')); // remove commas and convert to float
+      })
+      .isFloat({min: 1}).withMessage('Harga tidak valid'),
+    body("jumlah")
+      .notEmpty().withMessage("Jumlah tidak boleh kosong")
+      .customSanitizer(value => {
+        return parseFloat(value.replace(/,/g, '')); // remove commas and convert to float
+      })
+      .isFloat({min: 1}).withMessage('Jumlah tidak valid'),
+  ],
+  async (req, res) => {
+    try {
+      const id = req.params.id;
+      const materialId = req.params.materialId;
+      const errors = validationResult(req);
+  
+      if (!errors.isEmpty()) {
+        req.flash('errors', formatError(errors.array()));
+        req.flash('old', req.body);
+        return res.redirect('/prk/'+id+'/material/'+materialId);
+      }
+  
+      const { 
+        material_id,
+        harga,
+        jumlah,
+        token
+      } = req.body;
+  
+      if (!tokens.verify(secret, token)) {
+        throw new Error('invalid token!')
+      }
+
+      // validate material_id
+      const material = await Material.findOne({ _id: material_id }).lean();
+      if (!material) {
+        req.flash('errors', {
+          msg: 'Material tidak ditemukan',
+          param: 'material_id',
+        });
+        req.flash('old', req.body);
+        return res.redirect('/prk/'+id+'/material/baru');
+      }
+
+      const updateData = {
+        ...req.body,
+        updated_at: new Date().toISOString(), // auto-update updated_at
+      }
+  
+      const updatedPrkMaterial = await PrkMaterial.findByIdAndUpdate(materialId, updateData, {
+        new: true, // return updated document
+        runValidators: true,
+      });
+  
+      if(!updatedPrkMaterial) {
+        req.flash('toast', {
+          success: false,
+          message: 'Terjadi kesalahan'
+        });
+        res.redirect("/prk/" + id + '/material/' + materialId);
+      }
+
+      req.flash('toast', req.flash('toast', {
+        success: true,
+        message: 'Material berhasil diperbarui'
+      }));
+  
+      res.redirect("/prk/"+req.params.id+"/material/"+materialId);
     } catch (error) {
       res.status(500).json({ error: error.message });
     }
