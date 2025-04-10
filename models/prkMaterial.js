@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 
 const prkMaterialSchema = new mongoose.Schema({
+  material_id: mongoose.ObjectId,
   kode_normalisasi: String,
   nama_material: String,
   satuan: String,
