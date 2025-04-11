@@ -45,7 +45,7 @@ app.get("/", (req, res) => {
   });
 });
 
-app.use("/prk", require("./routes/prk"));
+app.use("/prk", require("./routes/prk.routes"));
 app.use("/skki", require("./routes/skki"));
 app.use("/pengadaan", require("./routes/pengadaan"));
 app.use("/kontrak", require("./routes/kontrak"));
