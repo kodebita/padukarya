@@ -141,9 +141,47 @@ async function storeSkki(req, res) {
   }
 }
 
+async function deleteSkkiById(req, res) {
+  try {
+    const skki = await Skki.findOne({ _id: req.params.id }).lean();
+
+    if(!skki) {
+      req.flash('toast', {
+        success: false,
+        message: 'SKKI tidak ditemukan'
+      });
+      return res.redirect('/skki');
+    }
+
+    // remove skki link from prk
+    const prks = await Prk.find({ prk_skki_id: skki._id }).lean();
+    for (let prk of prks) {
+      await Prk.findByIdAndUpdate(prk._id, {
+        prk_skki_id: null,
+        updated_at: new Date().toISOString(), // auto-update updated_at
+      }, {
+        new: true, // return updated document
+        runValidators: true,
+      });
+    }
+
+    await Skki.deleteOne({ _id: req.params.id });
+
+    req.flash('toast', {
+      success: true,
+      message: 'SKKI berhasil dihapus'
+    });
+
+    res.redirect('/skki');
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+}
+
 module.exports = {
   getSkki,
   getSkkiById,
   createSkki,
-  storeSkki
+  storeSkki,
+  deleteSkkiById
 };

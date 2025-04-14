@@ -15,6 +15,7 @@ router.get("/", skkiController.getSkki);
 router.get("/baru", skkiController.createSkki);
 router.post("/baru", skkiValidation.validateSkki, skkiController.storeSkki);
 router.get("/:id", skkiController.getSkkiById);
+router.get("/:id/hapus", skkiController.deleteSkkiById);
 
 // skki prk
 router.get("/:id/prk", skkiPrkController.getSkkiPrk);
