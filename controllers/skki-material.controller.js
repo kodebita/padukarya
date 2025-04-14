@@ -29,6 +29,7 @@ async function getSkkiMaterial(req, res) {
         title: "RAB Material SKKI",
         skki: skki,
         materials: materials,
+        toast: req.flash('toast')[0] || false,
       });
     } catch (error) {
       res.status(500).json({ error: error.message });
@@ -44,7 +45,7 @@ async function createSkkiMaterial(req, res) {
       skki: skki,
       token: tokens.create(secret),
       errors: req.flash("errors")[0] || [],
-      toast: req.flash("toast")[0] || [],
+      toast: req.flash("toast")[0] || false,
     });
   } catch (error) {
     res.status(500).json({ error: error.message });
