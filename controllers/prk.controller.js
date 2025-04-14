@@ -48,7 +48,14 @@ async function getPrk(req, res) {
 
 async function getPrkJson(req, res) {
   try {
-    const prks = await Prk.find().lean();
+    const query = {};
+    
+    const prkSkkiId = req.query.prk_skki_id;
+    if (prkSkkiId) {
+      query.prk_skki_id = prkSkkiId;
+    }
+
+    const prks = await Prk.find(query).lean();
   
     return res.json({
       success: true,
