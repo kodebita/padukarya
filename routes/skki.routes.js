@@ -8,12 +8,19 @@ const skkiMaterialController = require("../controllers/skki-material.controller"
 const skkiLampiranController = require("../controllers/skki-lampiran.controller");
 const skkiCatatanController = require("../controllers/skki-catatan.controller");
 
+const skkiValidation = require("../validations/skki.validation");
+
 // skki
 router.get("/", skkiController.getSkki);
+router.get("/baru", skkiController.createSkki);
+router.post("/baru", skkiValidation.validateSkki, skkiController.storeSkki);
 router.get("/:id", skkiController.getSkkiById);
 
 // skki prk
 router.get("/:id/prk", skkiPrkController.getSkkiPrk);
+router.get("/:id/prk/baru", skkiPrkController.createSkkiPrk);
+router.post("/:id/prk/baru", skkiValidation.validateSkkiPrk, skkiPrkController.storeSkkiPrk);
+router.get("/:id/prk/:prkId/hapus", skkiPrkController.deleteSkkiPrk);
 
 // skki jasa
 router.get("/:id/jasa", skkiJasaController.getSkkiJasa);
@@ -23,8 +30,12 @@ router.get("/:id/material", skkiMaterialController.getSkkiMaterial);
 
 // skki lampiran
 router.get("/:id/lampiran", skkiLampiranController.getSkkiLampiran);
+router.get("/:id/lampiran/baru", skkiLampiranController.createSkkiLampiran);
+router.post("/:id/lampiran/baru", skkiLampiranController.storeSkkiLampiran);
+router.get("/:id/lampiran/:lampiranId/hapus", skkiLampiranController.deleteSkkiLampiranById);
 
 // skki catatan
 router.get("/:id/catatan", skkiCatatanController.getSkkiCatatan);
+router.post("/:id/catatan/baru", skkiValidation.validateSkkiCatatan, skkiCatatanController.storeSkkiCatatan);
 
 module.exports = router;

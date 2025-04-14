@@ -14,6 +14,7 @@
   <div id="main-wrapper" data-theme="light" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full" data-sidebar-position="fixed" data-header-position="fixed" data-boxed-layout="full">
     <%- include("../_header") %>
     <%- include("../_sidebar") %>
+    <%- include("../_toast") %>
 
     <div class="page-wrapper">
       <div class="page-breadcrumb">
@@ -24,7 +25,9 @@
           </div>
           <div class="col-5 d-flex align-self-center justify-content-end">
             <button class="btn btn-dark me-1">Import</button>
-            <button class="btn btn-dark">Baru</button>
+            <a href="/skki/baru">
+              <button class="btn btn-dark" style="color: white!important;">Baru</button>
+            </a>
           </div>
         </div>
       </div>
@@ -47,7 +50,7 @@
                   <% skkis.forEach(function(skki){ %>
                   <tr>
                     <td>
-                      <a href="/skki/<%= skki._id %>"><strong><%= skki.nomor_prk_skki %></strong></a> <br>
+                      <a href="/skki/<%= skki._id %>"><strong><%= skki.nomor_skki %></strong></a> <br>
                       <small class="text-muted"><%= skki.nama_project %></small>
                     </td>
                     <td>

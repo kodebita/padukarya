@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>
+    <%= title %> | PaduKarya
+  </title>
+  <%- include("../_style") %>
+</head>
+
+<body>
+  <div id="main-wrapper" data-theme="light" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full" data-sidebar-position="fixed" data-header-position="fixed" data-boxed-layout="full">
+    <%- include("../_header") %>
+    <%- include("../_sidebar") %>
+    <%- include("../_toast") %>
+
+    <div class="page-wrapper">
+      <div class="page-breadcrumb">
+        <div class="row">
+          <div class="col-7 align-self-center">
+            <h3 class="page-title text-truncate text-dark font-weight-bold mb-1">SKKI Baru</h3>
+            <small>Buat SKKI Baru</small>
+          </div>
+          <div class="col-5 d-flex align-self-center justify-content-end">
+            <a href="/skki">
+              <button class="btn btn-dark">Kembali</button>
+            </a>
+          </div>
+        </div>
+      </div>
+      
+      <div class="container-fluid">
+        <div class="card">
+          <div class="card-body">
+            <h4 style="font-weight: 500;">Informasi</h4>
+            <hr>
+            <form action="/skki/baru" method="POST">
+              <input type="hidden" name="token" value="<%= token %>">
+
+              <div class="mb-4">
+                <label for="" class="form-label">Tahun</label>
+                <input type="number" name="tahun" id="" class="form-control" style="max-width: 220px;" value="<%= data.tahun %>">
+                <% if(errors) { %>
+                  <div class="text-danger mt-2 text-sm">
+                    <%= errors.tahun %>
+                  </div>
+                <% } %>
+              </div>
+
+              <div class="mb-4">
+                <label for="" class="form-label">Basket</label>
+                <select name="basket" id="" class="form-control" style="max-width: 220px;">
+                  <option value="">Pilih basket</option>
+                  <option value="1">1</option>
+                  <option value="2">2</option>
+                  <option value="3">3</option>
+                </select>
+                <% if(errors) { %>
+                  <div class="text-danger mt-2 text-sm">
+                    <%= errors.basket %>
+                  </div>
+                <% } %>
+              </div>
+
+              <div class="mb-4">
+                <label for="" class="form-label">Nama Project</label>
+                <textarea class="form-control" rows="2" name="nama_project"></textarea>
+                <% if(errors) { %>
+                  <div class="text-danger mt-2 text-sm">
+                    <%= errors.nama_project %>
+                  </div>
+                <% } %>
+              </div>
+
+              <div class="mb-4">
+                <label for="" class="form-label">Nomor SKKI</label>
+                <input type="text" name="nomor_skki" id="" class="form-control">
+                <% if(errors) { %>
+                  <div class="text-danger mt-2 text-sm">
+                    <%= errors.nomor_skki %>
+                  </div>
+                <% } %>
+              </div>
+
+              <div class="mb-4">
+                <label for="" class="form-label">Nomor PRK-SKKI</label>
+                <input type="text" name="nomor_prk_skki" id="" class="form-control">
+                <% if(errors) { %>
+                  <div class="text-danger mt-2 text-sm">
+                    <%= errors.nomor_prk_skki %>
+                  </div>
+                <% } %>
+              </div>
+
+              <div class="mb-4">
+                <label for="" class="form-label">Nomor WBS Jasa</label>
+                <input type="text" name="nomor_wbs_jasa" id="" class="form-control">
+                <% if(errors) { %>
+                  <div class="text-danger mt-2 text-sm">
+                    <%= errors.nomor_wbs_jasa %>
+                  </div>
+                <% } %>
+              </div>
+
+              <div class="mb-4">
+                <label for="" class="form-label">Nomor WBS Material</label>
+                <input type="text" name="nomor_wbs_material" id="" class="form-control">
+                <% if(errors) { %>
+                  <div class="text-danger mt-2 text-sm">
+                    <%= errors.nomor_wbs_material %>
+                  </div>
+                <% } %>
+              </div>
+
+              <div class="mb-4">
+                <label for="" class="form-label">Tipe</label>
+                <select name="type" id="" class="form-control" style="max-width: 220px;">
+                  <option value="">Pilih tipe</option>
+                  <option value="murni" >Murni</option>
+                  <option value="turunan" >Turunan</option>
+                </select>
+                <% if(errors) { %>
+                  <div class="text-danger mt-2 text-sm">
+                    <%= errors.type %>
+                  </div>
+                <% } %>
+              </div>
+              
+              <hr>
+              
+              <div class="d-flex justify-content-end">
+                <button class="btn btn-dark">Simpan</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <%- include("../_script") %>
+  </div>
+</body>
+
+</html>

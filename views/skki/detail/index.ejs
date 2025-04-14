@@ -14,6 +14,7 @@
   <div id="main-wrapper" data-theme="light" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full" data-sidebar-position="fixed" data-header-position="fixed" data-boxed-layout="full">
     <%- include("../../_header") %>
     <%- include("../../_sidebar") %>
+    <%- include("../../_toast") %>
 
     <div class="page-wrapper">
       <%- include("_breadcrumb", {title: "Informasi SKKI", skki: skki}) %>
@@ -31,44 +32,84 @@
                 <form action="">
                   <div class="mb-4">
                     <label for="" class="form-label">Tahun</label>
-                    <input type="number" name="" id="" class="form-control" style="max-width: 220px;" value="<%= skki.tahun %>">
+                    <input type="number" name="tahun" min="1000" max="9999" id="" class="form-control" style="max-width: 220px;" value="<%= skki.tahun %>" required>
+                    <% if(errors) { %>
+                      <div class="text-danger mt-2 text-sm">
+                        <%= errors.tahun %>
+                      </div>
+                    <% } %>
                   </div>
                   <div class="mb-4">
                     <label for="" class="form-label">Basket</label>
-                    <select name="" id="" class="form-control" style="max-width: 220px;">
+                    <select name="basket" id="" class="form-control" style="max-width: 220px;" required>
                       <option value="">Pilih basket</option>
                       <option value="1" <% if(skki.basket == 1 ){ %> selected <% } %>>1</option>
                       <option value="2" <% if(skki.basket == 2 ){ %> selected <% } %>>2</option>
                       <option value="3" <% if(skki.basket == 3 ){ %> selected <% } %>>3</option>
                     </select>
+                    <% if(errors) { %>
+                      <div class="text-danger mt-2 text-sm">
+                        <%= errors.basket %>
+                      </div>
+                    <% } %>
                   </div>
                   <div class="mb-4">
                     <label for="" class="form-label">Nama Project</label>
-                    <textarea class="form-control" rows="2"><%= skki.nama_project %></textarea>
+                    <textarea name="nama_project" class="form-control" rows="2"><%= skki.nama_project %></textarea>
+                    <% if(errors) { %>
+                      <div class="text-danger mt-2 text-sm">
+                        <%= errors.nama_project %>
+                      </div>
+                    <% } %>
                   </div>
                   <div class="mb-4">
                     <label for="" class="form-label">Nomor SKKI</label>
-                    <input type="text" name="" id="" class="form-control" value="<%= skki.nomor_skki %>">
+                    <input type="text" name="nomor_ski" id="" class="form-control" value="<%= skki.nomor_skki %>">
+                    <% if(errors) { %>
+                      <div class="text-danger mt-2 text-sm">
+                        <%= errors.nomor_ski %>
+                      </div>
+                    <% } %>
                   </div>
                   <div class="mb-4">
                     <label for="" class="form-label">Nomor PRK-SKKI</label>
-                    <input type="text" name="" id="" class="form-control" value="<%= skki.nomor_prk_skki %>">
+                    <input type="text" name="nomor_prk_skki" id="" class="form-control" value="<%= skki.nomor_prk_skki %>">
+                    <% if(errors) { %>
+                      <div class="text-danger mt-2 text-sm">
+                        <%= errors.nomor_prk_skki %>
+                      </div>
+                    <% } %>
                   </div>
                   <div class="mb-4">
                     <label for="" class="form-label">Nomor WBS Jasa</label>
-                    <input type="text" name="" id="" class="form-control" value="<%= skki.nomor_wbs_jasa %>">
+                    <input type="text" name="nomor_wbs_jasa" id="" class="form-control" value="<%= skki.nomor_wbs_jasa %>">
+                    <% if(errors) { %>
+                      <div class="text-danger mt-2 text-sm">
+                        <%= errors.nomor_wbs_jasa %>
+                      </div>
+                    <% } %>
                   </div>
                   <div class="mb-4">
                     <label for="" class="form-label">Nomor WBS Material</label>
-                    <input type="text" name="" id="" class="form-control" value="<%= skki.nomor_wbs_material %>">
+                    <input type="text" name="nomor_wbs_material" id="" class="form-control" value="<%= skki.nomor_wbs_material %>">
+                    <% if(errors) { %>
+                      <div class="text-danger mt-2 text-sm">
+                        <%= errors.nomor_wbs_material %>
+                      </div>
+                    <% } %>
                   </div>
                   <div class="mb-4">
                     <label for="" class="form-label">Tipe</label>
-                    <select name="" id="" class="form-control" style="max-width: 220px;">
+                    <select name="type" id="" class="form-control" style="max-width: 220px;" required>
                       <option value="">Pilih tipe</option>
                       <option value="murni" <% if(skki.type == "murni") { %> selected <% } %>>Murni</option>
                       <option value="turunan" <% if(skki.type == "turunan") { %> selected <% } %>>Turunan</option>
                     </select>
+                    <% if(errors) { %>
+                      <div class="text-danger mt-2 text-sm">
+                        <%= errors.type %>
+                      </div>
+                    <% } %>
                   </div>
                   <hr>
                   <div class="d-flex justify-content-end">
