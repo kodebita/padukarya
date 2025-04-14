@@ -46,6 +46,20 @@ async function getPrk(req, res) {
   }
 }
 
+async function getPrkJson(req, res) {
+  try {
+    const prks = await Prk.find().lean();
+  
+    return res.json({
+      success: true,
+      message: "List PRK",
+      data: prks,
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+}
+
 async function createPrk(req, res) {
   const token = tokens.create(secret);
   
@@ -122,6 +136,49 @@ async function getPrkById(req, res) {
   }
 }
 
+async function getPrkByIdJson(req, res) {
+  try {
+    const prk = await Prk.findOne({ _id: req.params.id }).lean();
+
+    if (!prk) {
+      return res.status(404).json({
+        status: false,
+        message: "PRK tidak ditemukan",
+      });
+    }
+
+    let rab_material = 0;
+    let rab_jasa = 0;
+
+    let materials = await PrkMaterial.find({ prk_id: prk._id }).lean();
+    for (let material of materials) {
+      rab_material += parseInt(material.harga) * parseInt(material.jumlah);
+    }
+
+    let jasas = await PrkJasa.find({ prk_id: prk._id }).lean();
+    for (let jasa of jasas) {
+      rab_jasa += parseInt(jasa.harga);
+    }
+
+    prk.rab_material = new Intl.NumberFormat("id-ID", {
+      style: "currency",
+      currency: "IDR",
+    }).format(rab_material);
+    prk.rab_jasa = new Intl.NumberFormat("id-ID", {
+      style: "currency",
+      currency: "IDR",
+    }).format(rab_jasa);
+
+    return res.json({
+      success: true,
+      message: "Detail PRK",
+      data: prk,
+    });
+  } catch(error) {
+    res.status(500).json({ error: error.message });
+  }
+}
+
 async function updatePrkById(req, res) {
   const id = req.params.id;
   
@@ -171,4 +228,12 @@ async function updatePrkById(req, res) {
   }
 }
 
-module.exports = { getPrk, createPrk, storePrk, getPrkById, updatePrkById };
+module.exports = { 
+  getPrk, 
+  getPrkJson,
+  createPrk, 
+  storePrk, 
+  getPrkById, 
+  updatePrkById,
+  getPrkByIdJson
+};
