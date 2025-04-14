@@ -1,4 +1,3 @@
-const { validationResult } = require('express-validator');
 const Tokens = require('csrf');
 const multer = require('multer');
 const fs = require('fs');
@@ -72,9 +71,11 @@ async function storePrkLampiran(req, res, next) {
         return res.redirect('/prk/' + id + '/lampiran/baru');
       }
 
+      const prk = await Prk.findOne({ _id: id }).lean();
+
       // write to mongo
-      const prkLampiran = new PrkLampiran({
-        prk_id: req.params.id,
+      const lampiran = new PrkLampiran({
+        prk_id: prk._id,
         nama_file: req.file.originalname,
         url_file: req.file.filename,
         type_file: req.file.mimetype,
@@ -82,12 +83,12 @@ async function storePrkLampiran(req, res, next) {
         created_at: new Date().toISOString()
       });
 
-      await prkLampiran.save();
+      await lampiran.save();
 
-      req.flash('toast', req.flash('toast', {
+      req.flash('toast', {
         success: true,
         message: 'Lampiran berhasil ditambahkan'
-      }));
+      })
 
       return res.redirect('/prk/' + id + '/lampiran');
     });
