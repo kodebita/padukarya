@@ -24,6 +24,11 @@ router.get("/:id/prk/:prkId/hapus", skkiPrkController.deleteSkkiPrk);
 
 // skki jasa
 router.get("/:id/jasa", skkiJasaController.getSkkiJasa);
+router.get("/:id/jasa/baru", skkiJasaController.createSkkiJasa);
+router.post("/:id/jasa/baru", skkiValidation.validatePrkJasa, skkiJasaController.storeSkkiJasa);
+router.get("/:id/jasa/:jasaId", skkiJasaController.getSkkiJasaById);
+router.post("/:id/jasa/:jasaId", skkiValidation.validatePrkJasa, skkiJasaController.updateSkkiJasaById);
+router.get("/:id/jasa/:jasaId/hapus", skkiJasaController.deleteSkkiJasaById);
 
 // skki material
 router.get("/:id/material", skkiMaterialController.getSkkiMaterial);

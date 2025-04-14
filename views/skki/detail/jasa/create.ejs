@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>
+    <%= title %> | PaduKarya
+  </title>
+  <%- include("../../../_style") %>
+</head>
+
+<body>
+  <div id="main-wrapper" data-theme="light" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full" data-sidebar-position="fixed" data-header-position="fixed" data-boxed-layout="full">
+    <%- include("../../../_header") %>
+    <%- include("../../../_sidebar") %>
+    <%- include("../../../_toast") %>
+
+    <div class="page-wrapper">
+      <%- include("../_breadcrumb", {title: "Input Jasa Baru pada SKKI", skki: skki}) %>
+      
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-3">
+            <%- include('../_sidebar', {page: 'jasa'}) %>
+          </div>
+          <div class="col-9">
+            <div class="card">
+              <div class="card-body">
+                <div class="d-flex justify-content-between">
+                  <h4 style="font-weight: 500;">Jasa Baru</h4>
+                  <a href="/skki/<%= skki._id %>/jasa">
+                    <button class="btn btn-dark" style="color: white !important;">Kembali</button>
+                  </a>
+                </div>
+
+                <hr>
+
+                <form action="/skki/<%= skki._id %>/jasa/baru" method="POST">
+                  <input type="hidden" name="token" value="<%= token %>">
+
+                  <div class="mb-4">
+                    <select class="form-select" name="prk_id" id="prk-select2" data-placeholder="Cari PRK"></select>
+                    <% if(errors) { %>
+                      <div class="text-danger mt-2 text-sm">
+                        <%= errors.prk_id %>
+                      </div>
+                    <% } %>
+                  </div>
+                  
+                  <div class="mb-4">
+                    <label for="nama_jasa" class="form-label">Nama Jasa</label>
+                    <textarea class="form-control" name="nama_jasa" rows="2"></textarea>
+                    <% if(errors) { %>
+                      <div class="text-danger mt-2 text-sm">
+                        <%= errors.nama_jasa %>
+                      </div>
+                    <% } %>
+                  </div>
+                  
+                  <div class="mb-4">
+                    <label for="" class="form-label">Harga</label>
+                    <div class="input-group mb-3" style="max-width: 320px;">
+                      <span class="input-group-text" id="basic-addon1">Rp</span>
+                      <input type="text" name="harga" onblur="formatNumber(this, true)" onfocus="unformatNumber(this, true)" id="" class="form-control" style="max-width: 220px;" value="">
+                    </div>
+                    <% if(errors) { %>
+                      <div class="text-danger mt-2 text-sm">
+                        <%= errors.harga %>
+                      </div>
+                    <% } %>
+                  </div>
+                  
+                  <hr>
+                  <div class="d-flex justify-content-end">
+                    <button class="btn btn-dark">Simpan</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <%- include("../../../_script") %>
+    <script>
+      
+      $(document).ready(function() {
+        $('#data_table').DataTable();
+
+        $('#prk-select2').select2({
+          theme: "bootstrap-5",
+          width: $( this ).data( 'width' ) ? $( this ).data( 'width' ) : $( this ).hasClass( 'w-100' ) ? '100%' : 'style',
+          placeholder: $( this ).data( 'placeholder' ),
+          ajax: {
+            url: '/prk/json?prk_skki_id=<%= skki._id %>',
+            data: function (params) {
+              var query = {
+                search: params.term,
+                type: 'public'
+              }
+              return query;
+            },
+            processResults: function (data) {
+              return {
+                results: data.data.map(function (item) {
+                  return {
+                    id: item._id,
+                    text: "[" + item.nomor_prk + "]" + item.nama_project
+                  }
+                })
+              };
+            }
+          }
+        });
+      });
+    </script>
+  </div>
+</body>
+
+</html>
