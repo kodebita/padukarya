@@ -25,5 +25,23 @@ module.exports = {
   validateSkkiPrk: [
     body("prk_id")
       .notEmpty().withMessage("PRK tidak boleh kosong")
-  ]
+  ],
+  validatePrkMaterial: [
+    body("prk_id")
+      .notEmpty().withMessage("PRK tidak boleh kosong"),
+    body("material_id")
+      .notEmpty().withMessage("Material tidak boleh kosong"),
+    body("harga")
+      .notEmpty().withMessage("Harga tidak boleh kosong")
+      .customSanitizer(value => {
+        return parseFloat(value.replace(/,/g, '')); // remove commas and convert to float
+      })
+      .isFloat({min: 1}).withMessage('Harga tidak valid'),
+    body("jumlah")
+      .notEmpty().withMessage("Jumlah tidak boleh kosong")
+      .customSanitizer(value => {
+        return parseFloat(value.replace(/,/g, '')); // remove commas and convert to float
+      })
+      .isFloat({min: 1}).withMessage('Jumlah tidak valid'),
+  ],
 }
