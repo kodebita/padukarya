@@ -117,7 +117,7 @@
           width: $( this ).data( 'width' ) ? $( this ).data( 'width' ) : $( this ).hasClass( 'w-100' ) ? '100%' : 'style',
           placeholder: $( this ).data( 'placeholder' ),
           ajax: {
-            url: '/prk/json',
+            url: '/prk/json?prk_skki_id=<%= skki._id %>',
             data: function (params) {
               var query = {
                 search: params.term,
