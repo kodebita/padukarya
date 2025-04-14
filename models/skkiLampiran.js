@@ -2,8 +2,9 @@ const mongoose = require("mongoose");
 
 const skkiLampiranSchema = new mongoose.Schema({
   nama_file: String,
-  type: String,
-  size: Number,
+  url_file: String,
+  type_file: String,
+  size_file: Number,
   uploader: mongoose.ObjectId,
   skki_id: mongoose.ObjectId,
   created_at: String,
