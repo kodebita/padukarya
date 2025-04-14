@@ -3,7 +3,7 @@ const path = require('path');
 const fs = require('fs');
 
 // List of allowed extensions
-const allowedExt = ['.jpg', '.jpeg', '.pdf', '.xlsx', '.docx'];
+const allowedExt = ['.jpg', '.jpeg', '.pdf', '.xlsx', '.docx', '.png', '.pptx', '.xls', '.doc', '.ppt'];
 
 // Max file size in bytes (15MB)
 const MAX_SIZE = 15 * 1024 * 1024;
