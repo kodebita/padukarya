@@ -1,0 +1,29 @@
+const { body } = require('express-validator');
+
+module.exports = {
+  validateSkki: [
+    body("tahun")
+      .notEmpty().withMessage("Tahun tidak boleh kosong")
+      .isNumeric().withMessage('Tahun harus berupa angka'),
+    body("basket")
+      .notEmpty().withMessage("Basket tidak boleh kosong")
+      .isNumeric().withMessage('Basket harus berupa angka')
+      .isIn([1, 2, 3]).withMessage('Basket harus 1, 2,  atau 3'),
+    body("nama_project").notEmpty().withMessage("Nama Project tidak boleh kosong"),
+    body("nomor_skki").notEmpty().withMessage("Nomor SKKI tidak boleh kosong"),
+    // body("nomor_prk_skki").notEmpty().withMessage("Nomor PRK-SKKI tidak boleh kosong"),
+    body("nomor_wbs_jasa").notEmpty().withMessage("Nomor WBS Jasa tidak boleh kosong"),
+    body("nomor_wbs_material").notEmpty().withMessage("Nomor WBS Material tidak boleh kosong"),
+    body("type")
+      .notEmpty().withMessage("Tipe tidak boleh kosong")
+      .isIn(['murni', 'turunan']).withMessage('Tipe harus murni atau turunan'),
+  ],
+  validateSkkiCatatan: [
+    body("catatan")
+      .notEmpty().withMessage("Catatan tidak boleh kosong")
+  ],
+  validateSkkiPrk: [
+    body("prk_id")
+      .notEmpty().withMessage("PRK tidak boleh kosong")
+  ]
+}
