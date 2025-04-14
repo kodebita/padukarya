@@ -12,10 +12,12 @@ const prkValidation = require("../validations/prk.validation");
 
 // prk
 router.get("/", prkController.getPrk);
+router.get("/json", prkController.getPrkJson);
 router.get("/baru", prkController.createPrk);
 router.post("/baru", prkValidation.validatePrk, prkController.storePrk);
 router.get("/:id", prkController.getPrkById);
 router.post("/:id", prkValidation.validatePrk, prkController.updatePrkById);
+router.get("/:id/json", prkController.getPrkByIdJson);
 
 // prk jasa
 router.get("/:id/jasa", prkJasaController.getPrkJasa);
