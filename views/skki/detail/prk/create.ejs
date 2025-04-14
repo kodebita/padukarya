@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>
+    <%= title %> | PaduKarya
+  </title>
+  <%- include("../../../_style") %>
+</head>
+
+<body>
+  <div id="main-wrapper" data-theme="light" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full" data-sidebar-position="fixed" data-header-position="fixed" data-boxed-layout="full">
+    <%- include("../../../_header") %>
+    <%- include("../../../_sidebar") %>
+    <%- include("../../../_toast") %>
+
+    <div class="page-wrapper">
+      <%- include("../_breadcrumb", {title: "Input Prk Baru pada SKKI", skki: skki}) %>
+      
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-3">
+            <%- include('../_sidebar', {page: 'prk'}) %>
+          </div>
+          <div class="col-9">
+            <div class="card">
+              <div class="card-body">
+                <div class="d-flex justify-content-between">
+                  <h4 style="font-weight: 500;">Input PRK</h4>
+                  <a href="/skki/<%= skki._id %>/prk">
+                    <button class="btn btn-dark" style="color: white !important;">Kembali</button>
+                  </a>
+                </div>
+
+                <hr>
+
+                <form action="/skki/<%= skki._id %>/prk/baru" method="POST">
+                  <input type="hidden" name="token" value="<%= token %>">
+
+                  <div class="mb-4">
+                    <label for="file" class="form-label">Pilih PRK</label>
+                    <select class="form-select" name="prk_id" id="single-select-field" data-placeholder="Cari PRK"></select>
+
+                    <% if(errors) { %>
+                      <div class="text-danger mt-2 text-sm">
+                        <%= errors.file %>
+                      </div>
+                    <% } %>
+                  </div>
+                  <table class="table table-bordered">
+                    <tbody>
+                      <tr>
+                        <th style="width: 20%;">Nomor PRK</th>
+                        <td id="nomorPrk"></td>
+                      </tr>
+                      <tr>
+                        <th>Nama Project</th>
+                        <td id="namaProject"></td>
+                      </tr>
+                      <tr>
+                        <th>WBS Jasa</th>
+                        <td id="wbsJasa"></td>
+                      </tr>
+                      <tr>
+                        <th>WBS Material</th>
+                        <td id="wbsMaterial"></td>
+                      </tr>
+                    </tbody>
+                  </table>
+                  
+                  <hr>
+
+                  <div class="d-flex justify-content-end">
+                    <button class="btn btn-dark" type="submit">Tambahkan</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <%- include("../../../_script") %>
+    <script>
+      $(document).ready(function() {
+        $('#single-select-field').select2({
+          theme: "bootstrap-5",
+          width: $( this ).data( 'width' ) ? $( this ).data( 'width' ) : $( this ).hasClass( 'w-100' ) ? '100%' : 'style',
+          placeholder: $( this ).data( 'placeholder' ),
+          ajax: {
+            url: '/prk/json',
+            data: function (params) {
+              var query = {
+                search: params.term,
+                type: 'public'
+              }
+              return query;
+            },
+            processResults: function (data) {
+              return {
+                results: data.data.map(function (item) {
+                  return {
+                    id: item._id,
+                    text: "[" + item.nomor_prk + "]" + item.nama_project
+                  }
+                })
+              };
+            }
+          }
+        });
+
+        $('#single-select-field').on('select2:select', function (e) {
+          var data = e.params.data;
+          console.log(data)
+          $.get('/prk/' + data.id + '/json', function (result) {
+            if(!result.success) {
+              return;
+            }
+
+            $('#nomorPrk').text(result.data.nomor_prk);
+            $('#namaProject').text(result.data.nama_project);
+            $('#wbsJasa').text(result.data.rab_jasa);
+            $('#wbsMaterial').text(result.data.rab_material);
+          }); 
+        });
+      })
+    </script>
+  </div>
+</body>
+
+</html>
