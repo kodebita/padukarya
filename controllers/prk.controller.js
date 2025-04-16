@@ -40,6 +40,7 @@ async function getPrk(req, res) {
     res.render("prk/index", {
       title: "PRK",
       prks: prks,
+      toast: req.flash('toast')[0] || false,
     });
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -235,6 +236,51 @@ async function updatePrkById(req, res) {
   }
 }
 
+async function deletePrkById(req, res) {
+  try {
+    const prk = await Prk.findOne({ _id: req.params.id }).lean();
+
+    if(!prk) {
+      req.flash('toast', {
+        success: false,
+        message: 'PRK tidak ditemukan'
+      });
+      return res.redirect('/prk');
+    }
+
+    // validate if prk is used in skki
+    if (prk.prk_skki_id) {
+      req.flash('toast', {
+        success: false,
+        message: 'PRK tidak dapat dihapus karena sudah digunakan di <a href="/skki/'+prk.prk_skki_id+'/prk"><u>SKKI berikut</u></a>'
+      });
+      return res.redirect('/prk');
+    }
+
+    // remove material prk
+    const materials = await PrkMaterial.find({ prk_id: prk._id }).lean();
+    for (let material of materials) {
+      await PrkMaterial.findByIdAndDelete(material._id);
+    }
+
+    const jasas = await PrkJasa.find({ prk_id: prk._id }).lean();
+    for (let jasa of jasas) {
+      await PrkJasa.findByIdAndDelete(jasa._id);
+    }
+
+    await Prk.findByIdAndDelete(prk._id);
+
+    req.flash('toast', {
+      success: true,
+      message: 'PRK berhasil dihapus'
+    });
+
+    return res.redirect('/prk');
+  } catch(error) {
+    res.status(500).json({ error: error.message });
+  }
+}
+
 module.exports = { 
   getPrk, 
   getPrkJson,
@@ -242,5 +288,6 @@ module.exports = {
   storePrk, 
   getPrkById, 
   updatePrkById,
-  getPrkByIdJson
+  getPrkByIdJson,
+  deletePrkById
 };

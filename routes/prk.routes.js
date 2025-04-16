@@ -18,6 +18,7 @@ router.post("/baru", prkValidation.validatePrk, prkController.storePrk);
 router.get("/:id", prkController.getPrkById);
 router.post("/:id", prkValidation.validatePrk, prkController.updatePrkById);
 router.get("/:id/json", prkController.getPrkByIdJson);
+router.get("/:id/hapus", prkController.deletePrkById);
 
 // prk jasa
 router.get("/:id/jasa", prkJasaController.getPrkJasa);

@@ -19,7 +19,7 @@
     $(document).ready(function() {
       $('#toastIcon').attr('class', "<% if(toast.success) { %>bi bi-check-circle<% } else { %>bi bi-x-circle<% } %>");
       $('#toastTitle').html("<%= toast.success ? 'Berhasil' : 'Error' %>")
-      $('#toastBody').html("<%= toast.message %>");
+      $('#toastBody').html(`<%- toast.message %>`);
       bootstrap.Toast.getOrCreateInstance($('#toast')).show()
     })
   </script>
