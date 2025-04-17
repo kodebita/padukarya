@@ -51,6 +51,27 @@ async function getSkki(req, res) {
   }
 }
 
+async function getSkkiJson(req, res) {
+  try {
+    const query = {};
+    
+    const nomorPrkSkki = req.query.nomor_prk_skki;
+    if (nomorPrkSkki) {
+      query.nomor_prk_skki = nomorPrkSkki;
+    }
+
+    const skkis = await Skki.find(query).lean();
+  
+    return res.json({
+      success: true,
+      message: "List SKKI",
+      data: skkis,
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+}
+
 async function getSkkiById(req, res) {
   try {
     const skki = await Skki.findOne({ _id: req.params.id }).lean();
@@ -180,6 +201,7 @@ async function deleteSkkiById(req, res) {
 
 module.exports = {
   getSkki,
+  getSkkiJson,
   getSkkiById,
   createSkki,
   storeSkki,

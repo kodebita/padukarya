@@ -12,6 +12,7 @@ const skkiValidation = require("../validations/skki.validation");
 
 // skki
 router.get("/", skkiController.getSkki);
+router.get("/json", skkiController.getSkkiJson);
 router.get("/baru", skkiController.createSkki);
 router.post("/baru", skkiValidation.validateSkki, skkiController.storeSkki);
 router.get("/:id", skkiController.getSkkiById);
