@@ -106,10 +106,10 @@
 
               <div class="mb-4">
                 <label for="" class="form-label">Nomor PRK-SKKI</label>
-                <input type="text" name="nomor_prk_skki" id="" class="form-control">
+                <select class="form-select" name="skki_id" id="skki-select2" data-placeholder="Nomor PRK-SKKI"></select>
                 <% if(errors) { %>
                   <div class="text-danger mt-2 text-sm">
-                    <%= errors.nomor_prk_skki %>
+                    <%= errors.skki_id %>
                   </div>
                 <% } %>
               </div>
@@ -154,6 +154,35 @@
     </div>
 
     <%- include("../_script") %>
+    <script>
+      $(document).ready(function() {
+        $('#skki-select2').select2({
+          theme: "bootstrap-5",
+          width: $( this ).data( 'width' ) ? $( this ).data( 'width' ) : $( this ).hasClass( 'w-100' ) ? '100%' : 'style',
+          placeholder: $( this ).data( 'placeholder' ),
+          ajax: {
+            url: '/skki/json',
+            data: function (params) {
+              var query = {
+                search: params.term,
+                type: 'public'
+              }
+              return query;
+            },
+            processResults: function (data) {
+              return {
+                results: data.data.map(function (item) {
+                  return {
+                    id: item._id,
+                    text: item.nomor_prk_skki
+                  }
+                })
+              };
+            }
+          }
+        });
+      })
+    </script>
   </div>
 </body>
 

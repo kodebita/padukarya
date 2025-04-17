@@ -7,6 +7,7 @@ const secret = tokens.secretSync();
 const formatError = require('../helper/error-formatter');
 
 // Model
+const Skki = require("../models/skki");
 const Pengadaan = require("../models/pengadaan");
 const PengadaanMaterial = require("../models/pengadaanMaterial");
 const PengadaanJasa = require("../models/pengadaanJasa");
@@ -85,7 +86,7 @@ async function storePengadaan(req, res) {
       nodin,
       tanggal_nodin,
       nomor_pr_jasa,
-      nomor_prk_skki,
+      skki_id,
       status,
       type,
       token
@@ -102,7 +103,7 @@ async function storePengadaan(req, res) {
       nodin: nodin,
       tanggal_nodin: tanggal_nodin,
       nomor_pr_jasa: nomor_pr_jasa,
-      nomor_prk_skki: nomor_prk_skki,
+      skki_id: skki_id,
       status: status,
       type: type,
       created_at: new Date().toISOString(),
@@ -119,11 +120,41 @@ async function storePengadaan(req, res) {
 async function getPengadaanById(req, res) {
   try {
     const pengadaan = await Pengadaan.findOne({ _id: req.params.id }).lean();
+    const skki = await Skki.findOne({ _id: pengadaan.skki_id }).lean();
 
     res.render("pengadaan/detail/index", {
       title: "Informasi Pengadaan",
       pengadaan: pengadaan,
+      skki: skki,
+      errors: req.flash('errors')[0] || {},
+      old: req.flash('old')[0] || {},
+      toast: req.flash('toast')[0] || false,
     });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+}
+
+async function deletePengadaanById(req, res) {
+  try {
+    const pengadaan = await Pengadaan.findOne({ _id: req.params.id }).lean();
+
+    if(!pengadaan) {
+      req.flash('toast', {
+        success: false,
+        message: 'Pengadaan tidak ditemukan'
+      });
+      return res.redirect('/pengadaan');
+    }
+
+    await Pengadaan.deleteOne({ _id: req.params.id });
+
+    req.flash('toast', {
+      success: true,
+      message: 'Pengadaan berhasil dihapus'
+    });
+
+    res.redirect('/pengadaan');
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -133,5 +164,6 @@ module.exports = {
   getPengadaan,
   createPengadaan,
   storePengadaan,
-  getPengadaanById
+  getPengadaanById,
+  deletePengadaanById
 }

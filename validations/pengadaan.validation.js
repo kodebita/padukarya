@@ -10,7 +10,9 @@ module.exports = {
       .isNumeric().withMessage('Basket harus berupa angka')
       .isIn([1, 2, 3]).withMessage('Basket harus 1, 2,  atau 3'),
     body("nama_project").notEmpty().withMessage("Nama Project tidak boleh kosong"),
-    body("nodin").notEmpty().withMessage("Nomor SKKI tidak boleh kosong"),
+    body("nodin").notEmpty().withMessage("Nodin tidak boleh kosong"),
+    body("skki_id")
+      .notEmpty().withMessage("Nomor PRK-SKKI tidak boleh kosong"),
     body("status")
       .notEmpty().withMessage("Status tidak boleh kosong")
       .isIn(['proses', 'terkontrak']).withMessage('Status harus proses atau terkontrak'),
