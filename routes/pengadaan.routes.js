@@ -8,7 +8,12 @@ const pengadaanMaterialController = require("../controllers/pengadaan-material.c
 const pengadaanLampiranController = require("../controllers/pengadaan-lampiran.controller");
 const pengadaanCatatanController = require("../controllers/pengadaan-catatan.controller");
 
+const pengadaanValidation = require("../validations/pengadaan.validation");
+
 router.get("/", pengadaanController.getPengadaan);
+router.get("/baru", pengadaanController.createPengadaan);
+router.post("/baru", pengadaanValidation.validatePengadaan, pengadaanController.storePengadaan);
+
 router.get("/:id", pengadaanController.getPengadaanById);
 
 router.get("/:id/prk", pengadaanPrkController.getPengadaanPrk);
