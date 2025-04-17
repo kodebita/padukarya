@@ -144,7 +144,7 @@ async function deletePengadaanPrkById(req, res) {
       return res.redirect('/pengadaan/'+req.params.id+'/prk');
     }
 
-    const prk = await Prk.findOne({ _id: req.params.prk_id }).lean();
+    const prk = await Prk.findOne({ _id: req.params.prkId }).lean();
 
     if(!prk) {
       req.flash('toast', {

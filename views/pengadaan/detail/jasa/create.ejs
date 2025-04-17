@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>
+    <%= title %> | PaduKarya
+  </title>
+  <%- include("../../../_style") %>
+</head>
+
+<body>
+  <div id="main-wrapper" data-theme="light" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full" data-sidebar-position="fixed" data-header-position="fixed" data-boxed-layout="full">
+    <%- include("../../../_header") %>
+    <%- include("../../../_sidebar") %>
+    <%- include("../../../_toast") %>
+
+    <div class="page-wrapper">
+      <%- include("../_breadcrumb", {title: "Input Jasa pada Pengadaan", pengadaan: pengadaan}) %>
+      
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-3">
+            <%- include('../_sidebar', {page: 'jasa'}) %>
+          </div>
+          <div class="col-9">
+            <div class="card">
+              <div class="card-body">
+                <div class="d-flex justify-content-between">
+                  <h4 style="font-weight: 500;">Input Jasa</h4>
+                  <a href="/pengadaan/<%= pengadaan._id %>/jasa/">
+                    <button class="btn btn-dark" style="color: white !important;">Kembali</button>
+                  </a>
+                </div>
+
+                <hr>
+
+                <form action="/pengadaan/<%= pengadaan._id %>/jasa/baru" method="POST">
+                  <input type="hidden" name="token" value="<%= token %>">
+
+                  <div class="mb-4">
+                    <label for="file" class="form-label">Pilih Jasa</label>
+                    <select class="form-select" name="prk_jasa_id" id="prk-jasa-select2" data-placeholder="Cari Jasa"></select>
+
+                    <% if(errors) { %>
+                      <div class="text-danger mt-2 text-sm">
+                        <%= errors.prk_jasa_id %>
+                      </div>
+                    <% } %>
+                  </div>
+                  
+                  <div class="mb-4">
+                    <label class="form-label" for="">Informasi Jasa pada PRK-SKKI</label>
+                    <table class="table table-bordered">
+                      <tbody>
+                        <tr>
+                          <th style="width: 20%;">Nomor PRK</th>
+                          <td id="nomorPrk"></td>
+                        </tr>
+                        <tr>
+                          <th>Nama Project</th>
+                          <td id="namaProject"></td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+
+                  <div class="mb-4">
+                    <label for="nama_jasa" class="form-label">Nama Jasa</label>
+                    <textarea class="form-control" name="nama_jasa" rows="2"></textarea>
+                    <% if(errors) { %>
+                      <div class="text-danger mt-2 text-sm">
+                        <%= errors.nama_jasa %>
+                      </div>
+                    <% } %>
+                  </div>
+                  
+                  <div class="mb-4">
+                    <label for="" class="form-label">Harga</label>
+                    <input type="text" name="harga" onblur="formatNumber(this, true)" onfocus="unformatNumber(this, true)" id="hargaInput" class="form-control" style="max-width: 220px;" value="">
+                    <% if(errors) { %>
+                      <div class="text-danger mt-2 text-sm">
+                        <%= errors.harga %>
+                      </div>
+                    <% } %>
+                  </div>
+
+                  <p class="text-sm text-muted"><em><i class="bi bi-info-circle-fill text-primary"></i> Mengubah jasa pada pengadaan tidak akan mengubah jasa pada PRK maupun SKKI.</em></p>
+                  
+                  <hr>
+
+                  <div class="d-flex justify-content-end">
+                    <button class="btn btn-dark" type="submit">Tambahkan</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <%- include("../../../_script") %>
+    <script>
+      $(document).ready(function() {
+        $('#prk-jasa-select2').select2({
+          theme: "bootstrap-5",
+          width: $( this ).data( 'width' ) ? $( this ).data( 'width' ) : $( this ).hasClass( 'w-100' ) ? '100%' : 'style',
+          placeholder: $( this ).data( 'placeholder' ),
+          ajax: {
+            url: '/skki/<%= pengadaan.skki_id %>/jasa/json',
+            data: function (params) {
+              var query = {
+                search: params.term,
+                type: 'public'
+              }
+              return query;
+            },
+            processResults: function (data) {
+              return {
+                results: data.data.map(function (item) {
+                  return {
+                    id: item._id,
+                    prk_id: item.prk_id,
+                    text: item.nama_jasa + " (" + new Intl.NumberFormat('id-ID', {style: 'currency', currency: 'IDR'}).format(item.harga) + ")",
+                  }
+                })
+              };
+            }
+          }
+        });
+
+        $('#prk-jasa-select2').on('select2:select', function (e) {
+          var data = e.params.data;
+          console.log(data)
+          $.get('/prk/' + data.prk_id + '/jasa/'+data.id+'/json', function (result) {
+            if(!result.success) {
+              return;
+            }
+
+            $('#nomorPrk').text(result.prk.nomor_prk);
+            $('#namaProject').text(result.prk.nama_project);
+            $('textarea[name="nama_jasa"]').val(result.jasa.nama_jasa);
+            $('input[name="harga"]').val(result.jasa.harga);
+            setTimeout(function() {
+              formatNumber(document.getElementById('hargaInput'), true)
+            }, 100);
+          }); 
+        });
+      })
+    </script>
+  </div>
+</body>
+
+</html>

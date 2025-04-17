@@ -26,6 +26,7 @@ router.get("/:id/jasa/baru", prkJasaController.createPrkJasa);
 router.post("/:id/jasa/baru", prkValidation.validatePrkJasa, prkJasaController.storePrkJasa);
 router.get("/:id/jasa/:jasaId", prkJasaController.getPrkJasaById);
 router.post("/:id/jasa/:jasaId", prkValidation.validatePrkJasa, prkJasaController.updatePrkJasaById);
+router.get("/:id/jasa/:jasaId/json", prkJasaController.getPrkJasaByIdJson);
 router.get("/:id/jasa/:jasaId/hapus", prkJasaController.deletePrkJasaById);
 
 // prk material

@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>
+    <%= title %> | PaduKarya
+  </title>
+  <%- include("../../../_style") %>
+</head>
+
+<body>
+  <div id="main-wrapper" data-theme="light" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full" data-sidebar-position="fixed" data-header-position="fixed" data-boxed-layout="full">
+    <%- include("../../../_header") %>
+    <%- include("../../../_sidebar") %>
+    <%- include("../../../_toast") %>
+
+    <div class="page-wrapper">
+      <%- include("../_breadcrumb", {title: "Ubah Jasa pada Pengadaan", pengadaan: pengadaan}) %>
+      
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-3">
+            <%- include('../_sidebar', {page: 'jasa'}) %>
+          </div>
+          <div class="col-9">
+            <div class="card">
+              <div class="card-body">
+                <div class="d-flex justify-content-between">
+                  <h4 style="font-weight: 500;">Informasi Jasa</h4>
+                  <a href="/pengadaan/<%= pengadaan._id %>/jasa">
+                    <button class="btn btn-dark" style="color: white !important;">Kembali</button>
+                  </a>
+                </div>
+
+                <hr>
+
+                <form action="/pengadaan/<%= pengadaan._id %>/jasa/<%= jasa._id %>" method="POST">
+                  <input type="hidden" name="token" value="<%= token %>">
+                  <div class="mb-4">
+                    <label class="form-label" for=""><a class="" data-bs-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
+                      Informasi Jasa pada PRK-SKKI <i id="collapseIcon" class="bi bi-chevron-right"></i>
+                    </a></label>
+                    <div class="collapse" id="collapseExample">
+                      <table class="table table-bordered">
+                        <tbody>
+                          <tr>
+                            <th style="width: 20%;">Nomor PRK-SKKI</th>
+                            <td id=""><%= skki.nomor_prk_skki %></td>
+                          </tr>
+                          <tr>
+                            <th>Nomor PRK</th>
+                            <td id=""><%= prk.nomor_prk %></td>
+                          </tr>
+                          <tr>
+                            <th>Jasa pada PRK</th>
+                            <td id=""><%= prkJasa.nama_jasa %>(<%= new Intl.NumberFormat('id-ID', {style: 'currency', currency: 'IDR'}).format(prkJasa.harga) %>)</td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+
+                  <div class="mb-4">
+                    <label for="nama_jasa" class="form-label">Nama Jasa</label>
+                    <textarea class="form-control" name="nama_jasa" rows="2"><%= jasa.nama_jasa %></textarea>
+                    <% if(errors) { %>
+                      <div class="text-danger mt-2 text-sm">
+                        <%= errors.nama_jasa %>
+                      </div>
+                    <% } %>
+                  </div>
+                  
+                  <div class="mb-4">
+                    <label for="" class="form-label">Harga</label>
+                    <div class="input-group mb-3" style="max-width: 320px;">
+                      <span class="input-group-text" id="basic-addon1">Rp</span>
+                      <input type="text" name="harga" onblur="formatNumber(this, true)" onfocus="unformatNumber(this, true)" id="hargaInput" class="form-control" style="max-width: 220px;" value="<%= jasa.harga %>">
+                    </div>
+                    <% if(errors) { %>
+                      <div class="text-danger mt-2 text-sm">
+                        <%= errors.harga %>
+                      </div>
+                    <% } %>
+                  </div>
+                  
+                  <hr>
+                  <div class="d-flex justify-content-end">
+                    <button class="btn btn-dark">Perbarui</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <%- include("../../../_script") %>
+    <script>
+      $(document).ready(function() {
+        formatNumber(document.getElementById('hargaInput'), true);
+
+        const myCollapsible = document.getElementById('collapseExample')
+        myCollapsible.addEventListener('hide.bs.collapse', event => {
+          $('#collapseIcon').removeClass('bi-chevron-down')
+          $('#collapseIcon').addClass('bi-chevron-right')
+        })
+        myCollapsible.addEventListener('show.bs.collapse', event => {
+          $('#collapseIcon').removeClass('bi-chevron-right')
+          $('#collapseIcon').addClass('bi-chevron-down')
+        })
+      })
+    </script>
+  </div>
+</body>
+
+</html>

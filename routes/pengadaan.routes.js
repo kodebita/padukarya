@@ -20,9 +20,14 @@ router.get("/:id/hapus", pengadaanController.deletePengadaanById);
 router.get("/:id/prk", pengadaanPrkController.getPengadaanPrk);
 router.get("/:id/prk/baru", pengadaanPrkController.createPengadaanPrk);
 router.post("/:id/prk/baru", pengadaanValidation.validatePengadaanPrk, pengadaanPrkController.storePengadaanPrk);
-router.get("/:id/prk/:prk_id/hapus", pengadaanPrkController.deletePengadaanPrkById);
+router.get("/:id/prk/:prkId/hapus", pengadaanPrkController.deletePengadaanPrkById);
 
 router.get("/:id/jasa", pengadaanJasaController.getPengadaanJasa);
+router.get("/:id/jasa/baru", pengadaanJasaController.createPengadaanJasa);
+router.post("/:id/jasa/baru", pengadaanValidation.validatePengadaanJasa, pengadaanJasaController.storePengadaanJasa);
+router.get("/:id/jasa/:jasaId", pengadaanJasaController.getPengadaanJasaById);
+router.post("/:id/jasa/:jasaId", pengadaanValidation.validatePengadaanJasaUpdate, pengadaanJasaController.updatePengadaanJasaById);
+router.get("/:id/jasa/:jasaId/hapus", pengadaanJasaController.deletePengadaanJasaById);
 
 router.get("/:id/material", pengadaanMaterialController.getPengadaanMaterial);
 

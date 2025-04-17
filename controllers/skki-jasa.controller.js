@@ -35,6 +35,33 @@ async function getSkkiJasa(req, res) {
   }
 }
 
+async function getSkkiJasaJson(req, res) {
+  try {
+    const skki = await Skki.findOne({ _id: req.params.id }).lean();
+    if(!skki) {
+      return res.status(404).json({ message: 'SKKI not found' });
+    }
+
+    const prks = await Prk.find({ prk_skki_id: skki._id }).lean();
+    let jasas = [];
+    for (let prk of prks) {
+      let prk_jasas = await PrkJasa.find({ prk_id: prk._id }).lean();
+      for (let prk_jasa of prk_jasas) {
+        prk_jasa.nomor_prk = prk.nomor_prk;
+        jasas.push(prk_jasa);
+      }
+    }
+
+    res.status(200).json({
+      status: "success",
+      message: "Data SKKI Jasa retrieved successfully",
+      data: jasas,
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+}
+
 async function createSkkiJasa(req, res) {
   try {
     const token = tokens.create(secret);
@@ -184,6 +211,7 @@ async function deleteSkkiJasaById(req, res) {
 
 module.exports = {
   getSkkiJasa,
+  getSkkiJasaJson,
   createSkkiJasa,
   storeSkkiJasa,
   getSkkiJasaById,

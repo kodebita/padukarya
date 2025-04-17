@@ -98,6 +98,30 @@ async function getPrkJasaById(req, res) {
     }
 }
 
+async function getPrkJasaByIdJson(req, res) {
+  try {
+    const prk = await Prk.findOne({ _id: req.params.id }).lean();
+    if (!prk) {
+      return res.status(404).json({ message: 'PRK not found' });
+    }
+
+    const jasa = await PrkJasa.findOne({ _id: req.params.jasaId }).lean();
+
+    if (!jasa) {
+      return res.status(404).json({ message: 'Jasa not found' });
+    }
+
+    res.json({
+      success: true,
+      jasa: jasa,
+      prk: prk,
+      message: 'Jasa found'
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+}
+
 async function updatePrkJasaById(req, res) {
   const id = req.params.id;
   const jasaId = req.params.jasaId;
@@ -164,4 +188,12 @@ async function deletePrkJasaById(req, res) {
   }
 }
 
-module.exports = { getPrkJasa, createPrkJasa, storePrkJasa, getPrkJasaById, updatePrkJasaById, deletePrkJasaById };
+module.exports = { 
+  getPrkJasa, 
+  createPrkJasa, 
+  storePrkJasa, 
+  getPrkJasaById, 
+  getPrkJasaByIdJson,
+  updatePrkJasaById, 
+  deletePrkJasaById 
+};

@@ -26,6 +26,7 @@ router.get("/:id/prk/:prkId/hapus", skkiPrkController.deleteSkkiPrk);
 
 // skki jasa
 router.get("/:id/jasa", skkiJasaController.getSkkiJasa);
+router.get("/:id/jasa/json", skkiJasaController.getSkkiJasaJson);
 router.get("/:id/jasa/baru", skkiJasaController.createSkkiJasa);
 router.post("/:id/jasa/baru", skkiValidation.validatePrkJasa, skkiJasaController.storeSkkiJasa);
 router.get("/:id/jasa/:jasaId", skkiJasaController.getSkkiJasaById);

@@ -46,9 +46,19 @@ module.exports = {
       })
       .isFloat({min: 1}).withMessage('Jumlah tidak valid'),
   ],
-  validatePrkJasa: [
-    body("prk_id")
-      .notEmpty().withMessage("PRK tidak boleh kosong"),
+  validatePengadaanJasa: [
+    body("prk_jasa_id")
+      .notEmpty().withMessage("PRK Jasa tidak boleh kosong"),
+    body("nama_jasa")
+      .notEmpty().withMessage("Nama Jasa tidak boleh kosong"),
+    body("harga")
+      .notEmpty().withMessage("Nominal tidak boleh kosong")
+      .customSanitizer(value => {
+        return parseFloat(value.replace(/,/g, '')); // remove commas and convert to float
+      })
+      .isNumeric().withMessage('Nominal harus berupa angka'),
+  ],
+  validatePengadaanJasaUpdate: [
     body("nama_jasa")
       .notEmpty().withMessage("Nama Jasa tidak boleh kosong"),
     body("harga")
