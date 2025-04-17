@@ -9,7 +9,7 @@ const pengadaanSchema = new mongoose.Schema({
   type: String,
   status: String,
   basket: Number,
-  prk_skki_id: mongoose.ObjectId,
+  skki_id: mongoose.ObjectId,
   tahun: Number,
   created_at: String,
   updated_at: String,
