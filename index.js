@@ -47,7 +47,7 @@ app.get("/", (req, res) => {
 
 app.use("/prk", require("./routes/prk.routes"));
 app.use("/skki", require("./routes/skki.routes"));
-app.use("/pengadaan", require("./routes/pengadaan"));
+app.use("/pengadaan", require("./routes/pengadaan.routes"));
 app.use("/kontrak", require("./routes/kontrak"));
 
 app.use("/material", require("./routes/material"));
