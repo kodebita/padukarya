@@ -18,6 +18,9 @@ router.get("/:id", pengadaanController.getPengadaanById);
 router.get("/:id/hapus", pengadaanController.deletePengadaanById);
 
 router.get("/:id/prk", pengadaanPrkController.getPengadaanPrk);
+router.get("/:id/prk/baru", pengadaanPrkController.createPengadaanPrk);
+router.post("/:id/prk/baru", pengadaanValidation.validatePengadaanPrk, pengadaanPrkController.storePengadaanPrk);
+router.get("/:id/prk/:prk_id/hapus", pengadaanPrkController.deletePengadaanPrkById);
 
 router.get("/:id/jasa", pengadaanJasaController.getPengadaanJasa);
 

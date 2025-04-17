@@ -24,7 +24,7 @@ module.exports = {
     body("catatan")
       .notEmpty().withMessage("Catatan tidak boleh kosong")
   ],
-  validateSkkiPrk: [
+  validatePengadaanPrk: [
     body("prk_id")
       .notEmpty().withMessage("PRK tidak boleh kosong")
   ],
