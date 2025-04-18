@@ -37,6 +37,9 @@ router.post("/:id/material/:materialId", pengadaanValidation.validatePengadaanMa
 router.get("/:id/material/:materialId/hapus", pengadaanMaterialController.deletePengadaanMaterialById);
 
 router.get("/:id/lampiran", pengadaanLampiranController.getPengadaanLampiran);
+router.get("/:id/lampiran/baru", pengadaanLampiranController.createPengadaanLampiran);
+router.post("/:id/lampiran/baru", pengadaanLampiranController.storePengadaanLampiran);
+router.get("/:id/lampiran/:lampiranId/hapus", pengadaanLampiranController.deletePengadaanLampiranById);
 
 router.get("/:id/catatan", pengadaanCatatanController .getPengadaanCatatan);
 
