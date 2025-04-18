@@ -167,11 +167,14 @@
         $('#material-select2').on('select2:select', function (e) {
           var data = e.params.data;
           $.get('/material/' + data.id + '/json', function (result) {
-            $('#hargaMaterial').val(result.data.harga);
+            $('#hargaMaterial').val(new Intl.NumberFormat('id-ID', {
+              minimumFractionDigits: 0,
+              maximumFractionDigits: 4
+            }).format(result.data.harga));
             $('#satuanMaterial').text('/' + result.data.satuan);
             $('#satuanMaterial2').text(result.data.satuan);
 
-            formatNumber(document.getElementById('hargaMaterial'));
+            formatNumber(document.getElementById('hargaMaterial'), true);
           }); 
         });
 

@@ -20,7 +20,7 @@ async function getPengadaanJasa(req, res) {
       pengadaan_id: pengadaan._id,
     }).lean();
 
-    for (jasa of jasas) {
+    for (let jasa of jasas) {
       let prk = await Prk.findOne({ _id: jasa.prk_id }).lean();
       jasa.nomor_prk = prk.nomor_prk;
     }
@@ -59,7 +59,7 @@ async function storePengadaanJasa(req, res) {
     // validate pengadaan
     if(!pengadaan) {
       req.flash('toast', {
-        type: 'error',
+        success: false,
         message: 'Pengadaan tidak ditemukan',
       });
       return res.redirect('/pengadaan/'+req.params.id+'/jasa/baru');

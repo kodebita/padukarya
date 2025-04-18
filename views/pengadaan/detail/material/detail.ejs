@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>
+    <%= title %> | PaduKarya
+  </title>
+  <%- include("../../../_style") %>
+</head>
+
+<body>
+  <div id="main-wrapper" data-theme="light" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full" data-sidebar-position="fixed" data-header-position="fixed" data-boxed-layout="full">
+    <%- include("../../../_header") %>
+    <%- include("../../../_sidebar", { page: 'pengadaan' }) %>
+    <%- include("../../../_toast") %>
+
+    <div class="page-wrapper">
+      <%- include("../_breadcrumb", {title: "Informasi Material pada Pengadaan", pengadaan: pengadaan}) %>
+      
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-3">
+            <%- include('../_sidebar', {page: 'material'}) %>
+          </div>
+          <div class="col-9">
+            <div class="card">
+              <div class="card-body">
+                <div class="d-flex justify-content-between">
+                  <h4 style="font-weight: 500;">Informasi Material</h4>
+                  <a href="/pengadaan/<%= pengadaan._id %>/material">
+                    <button class="btn btn-dark" style="color: white !important;">Kembali</button>
+                  </a>
+                </div>
+
+                <hr>
+
+                <form action="/pengadaan/<%= pengadaan._id %>/material/<%= material._id %>" method="POST">
+                  <input type="hidden" name="token" value="<%= token %>">
+                  <input type="hidden" name="pengadaan_material_id" value="<%= material._id %>">
+                  
+                  <div class="mb-4">
+                    <label class="form-label" for=""><a class="" data-bs-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
+                      Informasi Material pada PRK-SKKI <i id="collapseIcon" class="bi bi-chevron-right"></i>
+                    </a></label>
+                    <div class="collapse" id="collapseExample">
+                      <table class="table table-bordered">
+                        <tbody>
+                          <tr>
+                            <th style="width: 20%;">Nomor PRK-SKKI</th>
+                            <td id=""><%= skki.nomor_prk_skki %></td>
+                          </tr>
+                          <tr>
+                            <th>Nomor PRK</th>
+                            <td id=""><%= prk.nomor_prk %></td>
+                          </tr>
+                          <tr>
+                            <th>Kode Normalisasi</th>
+                            <td id=""><%= prkMaterial.kode_normalisasi %></td>
+                          </tr>
+                          <tr>
+                            <th>Nama Material</th>
+                            <td id=""><%= prkMaterial.nama_material %></td>
+                          </tr>
+                          <tr>
+                            <th>Harga pada PRK-SKKI</th>
+                            <td id=""><%= new Intl.NumberFormat('id-ID', {
+                              style: 'currency',
+                              currency: 'IDR',
+                              minimumFractionDigits: 0,
+                              maximumFractionDigits: 4
+                            }).format(prkMaterial.harga) %>/<%= prkMaterial.satuan %></td>
+                          </tr>
+                          <tr>
+                            <th>Jumlah pada PRK-SKKI</th>
+                            <td id=""><%= new Intl.NumberFormat('id-ID', {
+                              minimumFractionDigits: 0,
+                              maximumFractionDigits: 4
+                            }).format(prkMaterial.jumlah) %> <%= prkMaterial.satuan %></td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                  
+                  <div class="mb-4">
+                    <label for="" class="form-label">Harga</label>
+                    <div class="input-group mb-3" style="max-width: 320px;">
+                      <span class="input-group-text" id="basic-addon1">Rp</span>
+                      <input type="text" class="form-control form-control-number" id="hargaMaterialInput" onblur="formatNumber(this, true)" onfocus="unformatNumber(this, true)" name="harga" value="<%= new Intl.NumberFormat('id-ID', {
+                        minimumFractionDigits: 0,
+                        maximumFractionDigits: 4
+                      }).format(material.harga) %>" aria-describedby="basic-addon1">
+                      <span class="input-group-text" id="satuanMaterial">/pcs</span>
+                    </div>
+                    <% if(errors) { %>
+                      <div class="text-danger mt-2 text-sm">
+                        <%= errors.harga %>
+                      </div>
+                    <% } %>
+                  </div>
+
+                  <div class="mb-4">
+                    <label for="" class="form-label">Jumlah</label>
+                    <div class="input-group mb-3" style="max-width: 220px;">
+                      <input type="text" id="jumlahMaterialInput" class="form-control form-control-number" onblur="formatNumber(this, true)" onfocus="unformatNumber(this, true)" name="jumlah" aria-describedby="basic-addon1" value="<%= new Intl.NumberFormat('id-ID', {
+                        minimumFractionDigits: 0,
+                        maximumFractionDigits: 4
+                      }).format(material.jumlah) %>">
+                      <span class="input-group-text" id="satuanMaterial2">pcs</span>
+                    </div>
+                    <% if(errors) { %>
+                      <div class="text-danger mt-2 text-sm">
+                        <%= errors.jumlah %>
+                      </div>
+                    <% } %>
+                  </div>
+
+                  <div class="mb-4">
+                    <label for="" class="form-label">Subtotal</label>
+                    <div class="input-group mb-3" style="max-width: 320px;">
+                      <span class="input-group-text">Rp</span>
+                      <input type="text" id="subtotalInput" name="subtotal" class="form-control form-control-number" disabled aria-describedby="basic-addon1" value="<%= new Intl.NumberFormat('id-ID', {
+                        minimumFractionDigits: 0,
+                        maximumFractionDigits: 4
+                      }).format(material.jumlah * material.harga) %>">
+                    </div>
+                  </div>
+                  
+                  <hr>
+                  <div class="d-flex justify-content-end">
+                    <button class="btn btn-dark">Perbarui</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <%- include("../../../_script") %>
+    <script>
+      
+      $(document).ready(function() {
+        $('#data_table').DataTable();
+
+        $('input[name=harga]').on('input', function() {
+          const harga = parseFloat($(this).val().replace(/\./g, '').replace(/\,/g, '.'));
+          const jumlah = parseFloat($('input[name=jumlah]').val().replace(/\./g, '').replace(/\,/g, '.'));
+          const subtotal = harga * jumlah;
+
+          $('input[name=subtotal]').val(subtotal.toLocaleString('id-ID', {
+            minimumFractionDigits: 0,
+            maximumFractionDigits: 4
+          }));
+        });
+
+        $('input[name=jumlah]').on('input', function() {
+          const harga = parseFloat($('input[name=harga]').val().replace(/\./g, '').replace(/\,/g, '.'));
+          const jumlah = parseFloat($(this).val().replace(/\./g, '').replace(/\,/g, '.'));
+          const subtotal = harga * jumlah;
+
+          $('input[name=subtotal]').val(subtotal.toLocaleString('id-ID', {
+            minimumFractionDigits: 0,
+            maximumFractionDigits: 4
+          }));
+        });
+      });
+    </script>
+  </div>
+</body>
+
+</html>

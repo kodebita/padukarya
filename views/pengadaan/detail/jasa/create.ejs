@@ -142,7 +142,10 @@
             $('#nomorPrk').text(result.prk.nomor_prk);
             $('#namaProject').text(result.prk.nama_project);
             $('textarea[name="nama_jasa"]').val(result.jasa.nama_jasa);
-            $('input[name="harga"]').val(result.jasa.harga);
+            $('input[name="harga"]').val(new Intl.NumberFormat('id-ID', {
+              minimumFractionDigits: 0,
+              maximumFractionDigits: 4
+            }).format(result.jasa.harga));
             setTimeout(function() {
               formatNumber(document.getElementById('hargaInput'), true)
             }, 100);

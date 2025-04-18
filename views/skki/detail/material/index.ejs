@@ -49,7 +49,7 @@
                       <% materials.forEach(function(material) { %>
                         <tr>
                           <td>
-                            <a href="/prk/<%= material.prk_id %>"><small style="font-weight: 600;"><%= material.nomor_prk %></small></a><br>
+                            <a href="/prk/<%= material.prk_id %>"><small style="font-weight: 600;"><%= material.prk.nomor_prk %></small></a><br>
                             <p class="mb-0" style="font-weight: 500"><%= material.kode_normalisasi %></p>
                             <small class="mb-0 text-muted" style="white-space:break-spaces"><%= material.nama_material %></small>
                           </td>

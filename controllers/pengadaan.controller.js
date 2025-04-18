@@ -7,6 +7,9 @@ const secret = tokens.secretSync();
 const formatError = require('../helper/error-formatter');
 
 // Model
+const Prk = require("../models/prk");
+const PrkJasa = require("../models/prkJasa");
+const PrkMaterial = require("../models/prkMaterial");
 const Skki = require("../models/skki");
 const Pengadaan = require("../models/pengadaan");
 const PengadaanMaterial = require("../models/pengadaanMaterial");
@@ -16,24 +19,24 @@ async function getPengadaan(req, res) {
   try {
     const pengadaans = await Pengadaan.find().lean();
 
-    for (pengadaan of pengadaans) {
+    for (let pengadaan of pengadaans) {
       let rab_material = 0;
       let rab_jasa = 0;
 
       const pengadaanMaterials = await PengadaanMaterial.find({
         pengadaan_id: pengadaan._id,
       }).lean();
-      for (pengadaanMaterial of pengadaanMaterials) {
-        rab_material +=
-          parseInt(pengadaanMaterial.harga) *
-          parseInt(pengadaanMaterial.jumlah);
+
+      for (let pengadaanMaterial of pengadaanMaterials) {
+        rab_material += pengadaanMaterial.harga * pengadaanMaterial.jumlah;
       }
 
       const pengadaanJasas = await PengadaanJasa.find({
         pengadaan_id: pengadaan._id,
       }).lean();
-      for (pengadaanJasa of pengadaanJasas) {
-        rab_jasa += parseInt(pengadaanJasa.harga);
+
+      for (let pengadaanJasa of pengadaanJasas) {
+        rab_jasa += pengadaanJasa.harga;
       }
 
       pengadaan.rab_material = new Intl.NumberFormat("id-ID", {
@@ -151,6 +154,18 @@ async function deletePengadaanById(req, res) {
       return res.redirect('/pengadaan');
     }
 
+    // update prk
+    await Prk.updateMany({ pengadaan_id: pengadaan._id }, { $set: { pengadaan_id: null } });
+
+    // hapus pengadaan jasa
+    await PengadaanJasa.deleteMany({ pengadaan_id: req.params.id });
+    await PrkJasa.updateMany({ pengadaan_id: pengadaan._id }, { $set: { pengadaan_id: null } });
+    
+    // hapus pengadaan material
+    await PengadaanMaterial.deleteMany({ pengadaan_id: req.params.id });
+    await PrkMaterial.updateMany({ pengadaan_id: pengadaan._id }, { $set: { pengadaan_id: null } });
+
+    // hapus pengadaan
     await Pengadaan.deleteOne({ _id: req.params.id });
 
     req.flash('toast', {

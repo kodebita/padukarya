@@ -41,11 +41,11 @@
                   
                   <div class="mb-4">
                     <label for="" class="form-label">Pilih Material</label>
-                    <select class="form-select" name="material_id" id="prk-material-select2" data-placeholder="Cari Material"></select>
+                    <select class="form-select" name="prk_material_id" id="prk-material-select2" data-placeholder="Cari Material"></select>
 
                     <% if(errors) { %>
                       <div class="text-danger mt-2 text-sm">
-                        <%= errors.material_id %>
+                        <%= errors.prk_material_id %>
                       </div>
                     <% } %>
                   </div>
@@ -91,7 +91,7 @@
                   <div class="mb-4">
                     <label for="" class="form-label">Jumlah</label>
                     <div class="input-group mb-3" style="max-width: 220px;">
-                      <input type="text" id="jumlahMaterialInput" class="form-control form-control-number" onblur="formatNumber(this)" onfocus="unformatNumber(this)" name="jumlah" aria-describedby="basic-addon1">
+                      <input type="text" id="jumlahMaterialInput" class="form-control form-control-number" onblur="formatNumber(this, true)" onfocus="unformatNumber(this, true)" name="jumlah" aria-describedby="basic-addon1">
                       <span class="input-group-text" id="satuanMaterial2">pcs</span>
                     </div>
                     <% if(errors) { %>
@@ -146,7 +146,10 @@
                   return {
                     id: item._id,
                     prk_id: item.prk_id,
-                    text: "[" + item.kode_normalisasi + "]" + item.nama_material + " (Rp" + new Intl.NumberFormat('en-US').format(item.harga * item.jumlah) + ")",
+                    text: "[" + item.kode_normalisasi + "]" + item.nama_material + " (Rp" + new Intl.NumberFormat('id-ID', {
+                      minimumFractionDigits: 0,
+                      maximumFractionDigits: 4
+                    }).format(item.harga * item.jumlah) + ")",
                   }
                 })
               };
@@ -159,17 +162,26 @@
           $.get('/prk/' + data.prk_id +'/material/' + data.id + '/json', function (result) {
             $('#nomorPrk').text(result.prk.nomor_prk);
             $('#namaProject').text('/' + result.prk.nama_project);
-            $('#hargaMaterial').text(new Intl.NumberFormat('en-US', {
+            $('#hargaMaterial').text(new Intl.NumberFormat('id-ID', {
               style: 'currency',
               currency: 'IDR',
               minimumFractionDigits: 0,
               maximumFractionDigits: 4
             }).format(result.material.harga));
-            $('#jumlahMaterial').text(new Intl.NumberFormat('en-US').format(result.material.jumlah) + ' '+result.material.satuan);
+            $('#jumlahMaterial').text(new Intl.NumberFormat('id-ID', {
+              minimumFractionDigits: 0,
+              maximumFractionDigits: 4
+            }).format(result.material.jumlah) + ' '+result.material.satuan);
 
-            $('input[name=harga]').val(result.material.harga);
-            $('input[name=jumlah]').val(result.material.jumlah);
-            $('input[name=subtotal]').val((result.material.harga * result.material.jumlah).toLocaleString('en-US', {
+            $('input[name=harga]').val(new Intl.NumberFormat('id-ID', {
+              minimumFractionDigits: 0,
+              maximumFractionDigits: 4
+            }).format(result.material.harga));
+            $('input[name=jumlah]').val(new Intl.NumberFormat('id-ID', {
+              minimumFractionDigits: 0,
+              maximumFractionDigits: 4
+            }).format(result.material.jumlah));
+            $('input[name=subtotal]').val((result.material.harga * result.material.jumlah).toLocaleString('id-ID', {
               minimumFractionDigits: 0,
               maximumFractionDigits: 4
             }));
@@ -181,23 +193,23 @@
         });
 
         $('input[name=harga]').on('input', function() {
-          const harga = parseFloat($(this).val().replace(/,/g, ''));
-          const jumlah = parseFloat($('input[name=jumlah]').val().replace(/,/g, ''));
+          const harga = parseFloat($(this).val().replace(/\./g, '').replace(/\,/g, '.'));
+          const jumlah = parseFloat($('input[name=jumlah]').val().replace(/\./g, '').replace(/\,/g, '.'));
           const subtotal = harga * jumlah;
 
-          $('input[name=subtotal]').val(subtotal.toLocaleString('en-US', {
-            minimumFractionDigits: 2,
+          $('input[name=subtotal]').val(subtotal.toLocaleString('id-ID', {
+            minimumFractionDigits: 0,
             maximumFractionDigits: 4
           }));
         });
 
         $('input[name=jumlah]').on('input', function() {
-          const harga = parseFloat($('input[name=harga]').val().replace(/,/g, ''));
-          const jumlah = parseFloat($(this).val().replace(/,/g, ''));
+          const harga = parseFloat($('input[name=harga]').val().replace(/\./g, '').replace(/\,/g, '.'));
+          const jumlah = parseFloat($(this).val().replace(/\./g, '').replace(/\,/g, '.'));
           const subtotal = harga * jumlah;
 
-          $('input[name=subtotal]').val(subtotal.toLocaleString('en-US', {
-            minimumFractionDigits: 2,
+          $('input[name=subtotal]').val(subtotal.toLocaleString('id-ID', {
+            minimumFractionDigits: 0,
             maximumFractionDigits: 4
           }));
         });

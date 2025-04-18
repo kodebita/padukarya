@@ -49,7 +49,12 @@
                             <a href="/prk/<%= jasa.prk_id %>"><small style="font-weight: 600;"><%= jasa.nomor_prk %></small></a><br>
                             <p style="white-space:break-spaces"><%= jasa.nama_jasa %></p>
                           </td>
-                          <td><%= new Intl.NumberFormat('id-ID', {style: 'currency', currency: 'IDR'}).format(jasa.harga) %></td>
+                          <td><%= new Intl.NumberFormat('id-ID', {
+                            style: 'currency', 
+                            currency: 'IDR',
+                            minimumFractionDigits: 0,
+                            maximumFractionDigits: 4
+                          }).format(jasa.harga) %></td>
                           <td>
                             <div class="dropdown">
                               <button class="btn dropdown-toggle" style="background-color: #fff; box-shadow: 0 0 0" type="button" data-bs-toggle="dropdown" aria-expanded="false">

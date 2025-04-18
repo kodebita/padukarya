@@ -31,6 +31,10 @@ router.get("/:id/jasa/:jasaId/hapus", pengadaanJasaController.deletePengadaanJas
 
 router.get("/:id/material", pengadaanMaterialController.getPengadaanMaterial);
 router.get("/:id/material/baru", pengadaanMaterialController.createPengadaanMaterial);
+router.post("/:id/material/baru", pengadaanValidation.validatePengadaanMaterial, pengadaanMaterialController.storePengadaanMaterial);
+router.get("/:id/material/:materialId", pengadaanMaterialController.getPengadaanMaterialById);
+router.post("/:id/material/:materialId", pengadaanValidation.validatePengadaanMaterialUpdate, pengadaanMaterialController.updatePengadaanMaterialById);
+router.get("/:id/material/:materialId/hapus", pengadaanMaterialController.deletePengadaanMaterialById);
 
 router.get("/:id/lampiran", pengadaanLampiranController.getPengadaanLampiran);
 
