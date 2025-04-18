@@ -70,7 +70,7 @@ async function storeSkkiLampiran(req, res, next) {
           success: false,
           message: 'Terjadi Kesalahan'
         }));
-        return res.redirect('/prk/' + id + '/lampiran/baru');
+        return res.redirect('/skki/' + id + '/lampiran/baru');
       }
 
       const skki = await Skki.findOne({ _id: id }).lean();
