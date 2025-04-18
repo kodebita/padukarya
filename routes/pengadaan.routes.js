@@ -30,6 +30,7 @@ router.post("/:id/jasa/:jasaId", pengadaanValidation.validatePengadaanJasaUpdate
 router.get("/:id/jasa/:jasaId/hapus", pengadaanJasaController.deletePengadaanJasaById);
 
 router.get("/:id/material", pengadaanMaterialController.getPengadaanMaterial);
+router.get("/:id/material/baru", pengadaanMaterialController.createPengadaanMaterial);
 
 router.get("/:id/lampiran", pengadaanLampiranController.getPengadaanLampiran);
 

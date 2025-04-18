@@ -168,11 +168,11 @@ async function getPrkByIdJson(req, res) {
       rab_jasa += parseInt(jasa.harga);
     }
 
-    prk.rab_material = new Intl.NumberFormat("id-ID", {
+    prk.rab_material = new Intl.NumberFormat("en-US", {
       style: "currency",
       currency: "IDR",
     }).format(rab_material);
-    prk.rab_jasa = new Intl.NumberFormat("id-ID", {
+    prk.rab_jasa = new Intl.NumberFormat("en-US", {
       style: "currency",
       currency: "IDR",
     }).format(rab_jasa);

@@ -1,3 +1,11 @@
+const { validationResult } = require('express-validator');
+const Tokens = require('csrf');
+
+const tokens = new Tokens();
+const secret = tokens.secretSync();
+
+const formatError = require('../helper/error-formatter');
+
 // Model
 const Prk = require("../models/prk");
 const Pengadaan = require("../models/pengadaan");
@@ -25,6 +33,23 @@ async function getPengadaanMaterial(req, res) {
   }
 }
 
+async function createPengadaanMaterial(req, res) {
+  try {
+    const pengadaan = await Pengadaan.findOne({ _id: req.params.id }).lean();
+
+    res.render("pengadaan/detail/material/create", {
+      title: "Tambah Material Pengadaan",
+      pengadaan: pengadaan,
+      toast: req.flash("toast")[0] || false,
+      token: tokens.create(secret),
+      errors: req.flash("errors")[0] || {},
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+}
+
 module.exports = {
-  getPengadaanMaterial
+  getPengadaanMaterial,
+  createPengadaanMaterial
 }

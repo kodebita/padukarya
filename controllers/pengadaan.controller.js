@@ -37,10 +37,14 @@ async function getPengadaan(req, res) {
       }
 
       pengadaan.rab_material = new Intl.NumberFormat("id-ID", {
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 4,
         style: "currency",
         currency: "IDR",
       }).format(rab_material);
       pengadaan.rab_jasa = new Intl.NumberFormat("id-ID", {
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 4,
         style: "currency",
         currency: "IDR",
       }).format(rab_jasa);

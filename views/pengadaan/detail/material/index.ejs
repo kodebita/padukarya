@@ -13,7 +13,8 @@
 <body>
   <div id="main-wrapper" data-theme="light" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full" data-sidebar-position="fixed" data-header-position="fixed" data-boxed-layout="full">
     <%- include("../../../_header") %>
-    <%- include("../../../_sidebar") %>
+    <%- include("../../../_sidebar", { page: 'pengadaan' }) %>
+    <%- include("../../../_toast") %>
 
     <div class="page-wrapper">
       <%- include("../_breadcrumb", {title: "RAB Material Pengadaan", pengadaan: pengadaan}) %>
@@ -26,7 +27,12 @@
           <div class="col-9">
             <div class="card">
               <div class="card-body">
-                <h4 style="font-weight: 500;">List Material</h4>
+                <div class="d-flex justify-content-between">
+                  <h4 style="font-weight: 500;">List Material</h4>
+                  <a href="/pengadaan/<%= pengadaan._id %>/material/baru">
+                    <button class="btn btn-dark">Input Baru</button>
+                  </a>
+                </div>
                 <hr>
                 <div class="table-responsive">
                   <table id="data_table" class="table bordertable-bordered text-nowrap" style="width: 100%;">
@@ -47,9 +53,9 @@
                             <small class="text-muted"><%= material.kode_normalisasi %></small> <br>
                             <p class="mb-0" style="white-space:break-spaces"><%= material.nama_material %></p>
                           </td>
-                          <td><%= new Intl.NumberFormat('id-ID', {style: 'currency', currency: 'IDR'}).format(material.harga) %>/<%= material.satuan %></td>
-                          <td><%= new Intl.NumberFormat('id-ID').format(material.jumlah) %><%= material.satuan %></td>
-                          <td><%= new Intl.NumberFormat('id-ID', {style: 'currency', currency: 'IDR'}).format(material.harga * material.jumlah) %></td>
+                          <td><%= new Intl.NumberFormat('en-US', {style: 'currency', currency: 'IDR'}).format(material.harga) %>/<%= material.satuan %></td>
+                          <td><%= new Intl.NumberFormat('en-US').format(material.jumlah) %><%= material.satuan %></td>
+                          <td><%= new Intl.NumberFormat('en-US', {style: 'currency', currency: 'IDR'}).format(material.harga * material.jumlah) %></td>
                           <td>
                             <div class="dropdown">
                               <button class="btn dropdown-toggle" style="background-color: #fff; box-shadow: 0 0 0" type="button" data-bs-toggle="dropdown" aria-expanded="false">

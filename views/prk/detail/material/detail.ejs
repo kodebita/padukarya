@@ -13,7 +13,7 @@
 <body>
   <div id="main-wrapper" data-theme="light" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full" data-sidebar-position="fixed" data-header-position="fixed" data-boxed-layout="full">
     <%- include("../../../_header") %>
-    <%- include("../../../_sidebar") %>
+    <%- include("../../../_sidebar", { page: 'prk' }) %>
     <%- include("../../../_toast") %>
 
     <div class="page-wrapper">
@@ -55,7 +55,10 @@
                     <label for="" class="form-label">Harga</label>
                     <div class="input-group mb-3" style="max-width: 320px;">
                       <span class="input-group-text" id="basic-addon1">Rp</span>
-                      <input type="text" class="form-control form-control-number" id="hargaMaterial" onblur="formatNumber(this, true)" onfocus="unformatNumber(this, true)" name="harga" value="<%= material.harga %>" aria-describedby="basic-addon1">
+                      <input type="text" class="form-control form-control-number" id="hargaMaterial" onblur="formatNumber(this, true)" onfocus="unformatNumber(this, true)" name="harga" value="<%= new Intl.NumberFormat('id-ID', {
+                        minimumFractionDigits: 0,
+                        maximumFractionDigits: 4
+                      }).format(material.harga) %>" aria-describedby="basic-addon1">
                       <span class="input-group-text" id="satuanMaterial">/pcs</span>
                     </div>
                     <% if(errors) { %>
@@ -68,7 +71,10 @@
                   <div class="mb-4">
                     <label for="" class="form-label">Jumlah</label>
                     <div class="input-group mb-3" style="max-width: 220px;">
-                      <input id="jumlahMaterial" type="text" class="form-control form-control-number" onblur="formatNumber(this)" onfocus="unformatNumber(this)" name="jumlah" value="<%= material.jumlah %>" aria-describedby="basic-addon1">
+                      <input id="jumlahMaterial" type="text" class="form-control form-control-number" onblur="formatNumber(this, true)" onfocus="unformatNumber(this, true)" name="jumlah" value="<%= new Intl.NumberFormat('id-ID', {
+                        minimumFractionDigits: 0,
+                        maximumFractionDigits: 4
+                      }).format(material.jumlah) %>" aria-describedby="basic-addon1">
                       <span class="input-group-text" id="satuanMaterial2">pcs</span>
                     </div>
                     <% if(errors) { %>
@@ -158,8 +164,8 @@
         });
 
         $('input[name=harga]').on('input', function() {
-          const harga = parseFloat($(this).val().replace(/,/g, ''));
-          const jumlah = parseFloat($('input[name=jumlah]').val().replace(/,/g, ''));
+          const harga = parseFloat($(this).val().replace(/\./g, '').replace(/\,/g, '.'));
+          const jumlah = parseFloat($('input[name=jumlah]').val().replace(/\./g, '').replace(/\,/g, '.'));
           const subtotal = harga * jumlah;
 
           $('input[name=subtotal]').val(subtotal.toLocaleString('en-US', {
@@ -169,18 +175,18 @@
         });
 
         $('input[name=jumlah]').on('input', function() {
-          const harga = parseFloat($('input[name=harga]').val().replace(/,/g, ''));
-          const jumlah = parseFloat($(this).val().replace(/,/g, ''));
+          const harga = parseFloat($('input[name=harga]').val().replace(/\./g, '').replace(/\,/g, '.'));
+          const jumlah = parseFloat($(this).val().replace(/\./g, '').replace(/\,/g, '.'));
           const subtotal = harga * jumlah;
 
-          $('input[name=subtotal]').val(subtotal.toLocaleString('en-US', {
-            minimumFractionDigits: 2,
+          $('input[name=subtotal]').val(subtotal.toLocaleString('id-ID', {
+            minimumFractionDigits: 0,
             maximumFractionDigits: 4
           }));
         });
 
         formatNumber(document.getElementById('hargaMaterial'), true);
-        formatNumber(document.getElementById('jumlahMaterial'));
+        formatNumber(document.getElementById('jumlahMaterial'), true);
         
         $('#jumlahMaterial').trigger('input');
       });

@@ -35,6 +35,7 @@ router.get("/:id/material/baru", prkMaterialController.createPrkMaterial);
 router.post("/:id/material/baru", prkValidation.validatePrkMaterial, prkMaterialController.storePrkMaterial);
 router.get("/:id/material/:materialId", prkMaterialController.getPrkMaterialById);
 router.post("/:id/material/:materialId", prkValidation.validatePrkMaterial, prkMaterialController.updatePrkMaterialById);
+router.get("/:id/material/:materialId/json", prkMaterialController.getPrkMaterialByIdJson);
 router.get("/:id/material/:materialId/hapus", prkMaterialController.deletePrkMaterialById);
 
 // prk lampiran

@@ -26,31 +26,36 @@
 <% } %>
 <script>
   function formatNumberInput(el) {
-    const val = parseFloat(el.val());
+    const val = parseFloat(el.val().replace(/\./g, '').replace(/\,/g, '.'));
 
     if (!isNaN(val)) {
-      el.val(val.toLocaleString('en-US', {
-        minimumFractionDigits: 2,
+      el.val(val.toLocaleString('id-ID', {
+        minimumFractionDigits: 0,
         maximumFractionDigits: 4
       }));
     }
   }
 
   function formatNumber(el, fraction = false) {
-    const raw = parseFloat(el.value);
+    const raw = parseFloat(el.value.replace(/\./g, '').replace(/\,/g, '.'));
     if (!isNaN(raw)) {
       if(fraction) {
-        el.value = raw.toLocaleString('en-US', {
-          minimumFractionDigits: 2,
+        el.value = raw.toLocaleString('id-ID', {
+          minimumFractionDigits: 0,
           maximumFractionDigits: 4
         });
       } else {
-        el.value = raw.toLocaleString('en-US');
+        el.value = raw.toLocaleString('id-ID');
       }
     }
   }
 
   function unformatNumber(el) {
-    el.value = el.value.replace(/,/g, '');
+    if(el.value === '') {
+      el.value = '';
+      return;
+    }
+    
+    el.value = el.value.replace(/\./g, '').replace('\,/g', '.');
   }
 </script>

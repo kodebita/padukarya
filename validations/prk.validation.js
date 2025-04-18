@@ -25,7 +25,7 @@ module.exports = {
     body("harga")
       .notEmpty().withMessage("Nominal tidak boleh kosong")
       .customSanitizer(value => {
-        return parseFloat(value.replace(/,/g, '')); // remove commas and convert to float
+        return parseFloat(value.toString().replace(/\./g, '').replace(/\,/g, '.')); // remove commas and convert to float
       })
       .isNumeric().withMessage('Nominal harus berupa angka'),
   ],
@@ -35,13 +35,13 @@ module.exports = {
     body("harga")
       .notEmpty().withMessage("Harga tidak boleh kosong")
       .customSanitizer(value => {
-        return parseFloat(value.replace(/,/g, '')); // remove commas and convert to float
+        return parseFloat(value.toString().replace(/\./g, '').replace(/\,/g, '.')); // remove commas and convert to float
       })
       .isFloat({min: 1}).withMessage('Harga tidak valid'),
     body("jumlah")
       .notEmpty().withMessage("Jumlah tidak boleh kosong")
       .customSanitizer(value => {
-        return parseFloat(value.replace(/,/g, '')); // remove commas and convert to float
+        return parseFloat(value.toString().replace(/\./g, '').replace(/\,/g, '.')); // remove commas and convert to float
       })
       .isFloat({min: 1}).withMessage('Jumlah tidak valid'),
   ],

@@ -14,19 +14,19 @@
           <span class="hide-menu">Tahapan</span>
         </li>
 
-        <li class="sidebar-item">
+        <li class="sidebar-item <%= page == 'prk' ? 'selected' : '' %>">
           <a class="sidebar-link" href="/prk" aria-expanded="false">
             <i class="bi bi-journal-album"></i> <span class="hide-menu">PRK</span>
           </a>
         </li>
 
-        <li class="sidebar-item">
+        <li class="sidebar-item <%= page == 'skki' ? 'selected' : '' %>">
           <a class="sidebar-link" href="/skki" aria-expanded="false">
             <i class="bi bi-envelope-paper"></i> <span class="hide-menu">SKKI</span>
           </a>
         </li>
         
-        <li class="sidebar-item">
+        <li class="sidebar-item <%= page == 'pengadaan' ? 'selected' : '' %>">
           <a class="sidebar-link" href="/pengadaan" aria-expanded="false">
             <i class="bi bi-cart4"></i> <span class="hide-menu">Pengadaan</span>
           </a>

@@ -120,6 +120,21 @@ async function getPrkMaterialById(req, res) {
   }
 }
 
+async function getPrkMaterialByIdJson(req, res) {
+  try {
+    const prk = await Prk.findOne({ _id: req.params.id }).lean();
+    const material = await PrkMaterial.findOne({ _id: req.params.materialId }).lean();
+
+    res.json({
+      title: "RAB Material PRK",
+      prk: prk,
+      material: material,
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  } 
+}
+
 async function updatePrkMaterialById(req, res) {
   try {
     const id = req.params.id;
@@ -210,4 +225,12 @@ async function deletePrkMaterialById(req, res) {
   }
 }
 
-module.exports = { getPrkMaterial, createPrkMaterial, storePrkMaterial, getPrkMaterialById, updatePrkMaterialById, deletePrkMaterialById };  
+module.exports = { 
+  getPrkMaterial, 
+  createPrkMaterial, 
+  storePrkMaterial, 
+  getPrkMaterialById, 
+  getPrkMaterialByIdJson,
+  updatePrkMaterialById, 
+  deletePrkMaterialById 
+};  

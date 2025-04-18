@@ -36,6 +36,31 @@ async function getSkkiMaterial(req, res) {
     }
 }
 
+async function getSkkiMaterialJson(req, res) {
+  try {
+    const skki = await Skki.findOne({ _id: req.params.id }).lean();
+  
+      let materials = [];
+  
+      const prks = await Prk.find({ prk_skki_id: skki._id }).lean();
+      for (let prk of prks) {
+        let prk_materials = await PrkMaterial.find({ prk_id: prk._id }).lean();
+        for (let prk_material of prk_materials) {
+          prk_material.nomor_prk = prk.nomor_prk;
+          materials.push(prk_material);
+        }
+      }
+
+      res.status(200).json({
+        status: "success",
+        message: "Data SKKI Material retrieved successfully",
+        data: materials,
+      })
+  } catch (error) {
+    
+  }
+}
+
 async function createSkkiMaterial(req, res) {
   try {
     const skki = await Skki.findOne({ _id: req.params.id }).lean();
@@ -224,6 +249,7 @@ async function deleteSkkiMaterialById(req, res) {
 
 module.exports = {
   getSkkiMaterial,
+  getSkkiMaterialJson,
   createSkkiMaterial,
   storeSkkiMaterial,
   getSkkiMaterialById,

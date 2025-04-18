@@ -35,6 +35,7 @@ router.get("/:id/jasa/:jasaId/hapus", skkiJasaController.deleteSkkiJasaById);
 
 // skki material
 router.get("/:id/material", skkiMaterialController.getSkkiMaterial);
+router.get("/:id/material/json", skkiMaterialController.getSkkiMaterialJson);
 router.get("/:id/material/baru", skkiMaterialController.createSkkiMaterial);
 router.post("/:id/material/baru", skkiValidation.validatePrkMaterial, skkiMaterialController.storeSkkiMaterial);
 router.get("/:id/material/:materialId", skkiMaterialController.getSkkiMaterialById);

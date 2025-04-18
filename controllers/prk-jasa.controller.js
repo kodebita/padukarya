@@ -141,6 +141,8 @@ async function updatePrkJasaById(req, res) {
       harga: harga,
       updated_at: new Date().toISOString(), // auto-update updated_at
     };
+    console.log(req.body)
+    console.log(updateData)
     const updatedPrkJasa = await PrkJasa.findByIdAndUpdate(jasaId, updateData, {
       new: true, // return updated document
       runValidators: true,
