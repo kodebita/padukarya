@@ -42,5 +42,6 @@ router.post("/:id/lampiran/baru", pengadaanLampiranController.storePengadaanLamp
 router.get("/:id/lampiran/:lampiranId/hapus", pengadaanLampiranController.deletePengadaanLampiranById);
 
 router.get("/:id/catatan", pengadaanCatatanController .getPengadaanCatatan);
+router.post("/:id/catatan/baru", pengadaanValidation.validatePengadaanCatatan, pengadaanCatatanController.storePengadaanCatatan);
 
 module.exports = router;

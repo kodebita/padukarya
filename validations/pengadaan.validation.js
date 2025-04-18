@@ -20,7 +20,7 @@ module.exports = {
       .notEmpty().withMessage("Tipe tidak boleh kosong")
       .isIn(['murni', 'turunan']).withMessage('Tipe harus murni atau turunan'),
   ],
-  validateSkkiCatatan: [
+  validatePengadaanCatatan: [
     body("catatan")
       .notEmpty().withMessage("Catatan tidak boleh kosong")
   ],
