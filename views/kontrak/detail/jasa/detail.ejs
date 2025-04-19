@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>
+    <%= title %> | PaduKarya
+  </title>
+  <%- include("../../../_style") %>
+</head>
+
+<body>
+  <div id="main-wrapper" data-theme="light" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full" data-sidebar-position="fixed" data-header-position="fixed" data-boxed-layout="full">
+    <%- include("../../../_header") %>
+    <%- include("../../../_sidebar", { page: 'kontrak' }) %>
+    <%- include("../../../_toast") %>
+
+    <div class="page-wrapper">
+      <%- include("../_breadcrumb", {title: "Ubah Jasa pada Kontrak", kontrak: kontrak}) %>
+      
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-3">
+            <%- include('../_sidebar', {page: 'jasa'}) %>
+          </div>
+          <div class="col-9">
+            <div class="card">
+              <div class="card-body">
+                <div class="d-flex justify-content-between">
+                  <h4 style="font-weight: 500;">Informasi Jasa</h4>
+                  <a href="/kontrak/<%= kontrak._id %>/jasa">
+                    <button class="btn btn-dark" style="color: white !important;">Kembali</button>
+                  </a>
+                </div>
+
+                <hr>
+
+                <form action="/kontrak/<%= kontrak._id %>/jasa/<%= jasa._id %>" method="POST">
+                  <input type="hidden" name="token" value="<%= token %>">
+
+                  <div class="mb-4">
+                    <label for="nama_jasa" class="form-label">Nama Jasa</label>
+                    <textarea class="form-control" name="nama_jasa" rows="2"><%= jasa.nama_jasa %></textarea>
+                    <% if(errors) { %>
+                      <div class="text-danger mt-2 text-sm">
+                        <%= errors.nama_jasa %>
+                      </div>
+                    <% } %>
+                  </div>
+                  
+                  <div class="mb-4">
+                    <label for="" class="form-label">Harga</label>
+                    <div class="input-group mb-3" style="max-width: 320px;">
+                      <span class="input-group-text" id="basic-addon1">Rp</span>
+                      <input type="text" name="harga" onblur="formatNumber(this, true)" onfocus="unformatNumber(this, true)" id="hargaInput" class="form-control" style="max-width: 220px;" 
+                        value="<%= new Intl.NumberFormat('id-ID', {
+                          minimumFractionDigits: 0,
+                          maximumFractionDigits: 4
+                        }).format(jasa.harga) %>">
+                    </div>
+                    <% if(errors) { %>
+                      <div class="text-danger mt-2 text-sm">
+                        <%= errors.harga %>
+                      </div>
+                    <% } %>
+                  </div>
+                  
+                  <hr>
+                  <div class="d-flex justify-content-end">
+                    <button class="btn btn-dark">Perbarui</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <%- include("../../../_script") %>
+    <script>
+      $(document).ready(function() {
+        formatNumber(document.getElementById('hargaInput'), true);
+      })
+    </script>
+  </div>
+</body>
+
+</html>

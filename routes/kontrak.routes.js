@@ -26,6 +26,11 @@ router.get('/:id/amandemen/selesai', kontrakAmandemenController.doneKontrakAmand
 router.get("/:id/prk", kontrakPrkController.getKontrakPrk);
 
 router.get("/:id/jasa", kontrakJasaController.getKontrakJasa);
+router.get("/:id/jasa/baru", kontrakJasaController.createKontrakJasa);
+router.post("/:id/jasa/baru", kontrakValidation.validateKontrakJasa, kontrakJasaController.storeKontrakJasa);
+router.get("/:id/jasa/:jasaId", kontrakJasaController.getKontrakJasaById);
+router.post("/:id/jasa/:jasaId", kontrakValidation.validateKontrakJasa, kontrakJasaController.updateKontrakJasaById);
+router.get("/:id/jasa/:jasaId/hapus", kontrakJasaController.deleteKontrakById);
 
 router.get("/:id/material", kontrakMaterialController.getKontrakMaterial);
 

@@ -109,9 +109,7 @@ module.exports = {
       })
       .isFloat({min: 1}).withMessage('Jumlah tidak valid'),
   ],
-  validatePengadaanJasa: [
-    body("prk_jasa_id")
-      .notEmpty().withMessage("PRK Jasa tidak boleh kosong"),
+  validateKontrakJasa: [
     body("nama_jasa")
       .notEmpty().withMessage("Nama Jasa tidak boleh kosong"),
     body("harga")

@@ -36,6 +36,23 @@ async function getPengadaanJasa(req, res) {
   }
 }
 
+async function getPengadaanJasaJson(req, res) {
+  try {
+    const pengadaan = await Pengadaan.findOne({ _id: req.params.id }).lean();
+    const jasas = await PengadaanJasa.find({
+      pengadaan_id: pengadaan._id,
+    }).lean();
+
+    res.json({
+      success: true,
+      message: "Berhasil mendapatkan data RAB Jasa",
+      data: jasas,
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+}
+
 async function createPengadaanJasa(req, res) {
   try {
     const pengadaan = await Pengadaan.findOne({_id: req.params.id}).lean();
@@ -179,6 +196,33 @@ async function getPengadaanJasaById(req, res) {
   }
 }
 
+async function getPengadaanJasaByIdJson(req, res) {
+  try {
+    const pengadaan = await Pengadaan.findOne({ _id: req.params.id }).lean();
+    if (!pengadaan) {
+      return res.status(404).json({
+        success: false,
+        message: 'Pengadaan tidak ditemukan',
+      });
+    }
+
+    const jasa = await PengadaanJasa.findOne({ _id: req.params.jasaId }).lean();
+    if (!jasa) {
+      return res.status(404).json({
+        success: false,
+        message: 'RAB Jasa tidak ditemukan',
+      });
+    }
+
+    res.json({
+      success: true,
+      message: 'Berhasil mendapatkan data RAB Jasa',
+      data: jasa,
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+}
 
 async function updatePengadaanJasaById(req, res) {
   try {
@@ -292,9 +336,11 @@ async function deletePengadaanJasaById(req, res) {
 
 module.exports = {
   getPengadaanJasa,
+  getPengadaanJasaJson,
   createPengadaanJasa,
   storePengadaanJasa,
   getPengadaanJasaById,
+  getPengadaanJasaByIdJson,
   updatePengadaanJasaById,
   deletePengadaanJasaById
 }
