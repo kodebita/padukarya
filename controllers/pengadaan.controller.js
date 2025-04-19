@@ -62,6 +62,20 @@ async function getPengadaan(req, res) {
   }
 }
 
+async function getPengadaanJson(req, res) {
+  try {
+    const pengadaans = await Pengadaan.find().lean();
+
+    res.json({
+      status: true,
+      message: "success",
+      data: pengadaans,
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+}
+
 async function createPengadaan(req, res) {
   const token = tokens.create(secret);
   
@@ -181,6 +195,7 @@ async function deletePengadaanById(req, res) {
 
 module.exports = {
   getPengadaan,
+  getPengadaanJson,
   createPengadaan,
   storePengadaan,
   getPengadaanById,

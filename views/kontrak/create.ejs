@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>
+    <%= title %> | PaduKarya
+  </title>
+  <%- include("../_style") %>
+</head>
+
+<body>
+  <div id="main-wrapper" data-theme="light" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full" data-sidebar-position="fixed" data-header-position="fixed" data-boxed-layout="full">
+    <%- include("../_header") %>
+    <%- include("../_sidebar", { page: 'kontrak' }) %>
+    <%- include("../_toast") %>
+
+    <div class="page-wrapper">
+      <div class="page-breadcrumb">
+        <div class="row">
+          <div class="col-7 align-self-center">
+            <h3 class="page-title text-truncate text-dark font-weight-bold mb-1">Kontrak Baru</h3>
+            <small>Buat Kontrak Baru</small>
+          </div>
+          <div class="col-5 d-flex align-self-center justify-content-end">
+            <a href="/kontrak">
+              <button class="btn btn-dark">Kembali</button>
+            </a>
+          </div>
+        </div>
+      </div>
+      
+      <div class="container-fluid">
+        <div class="card">
+          <div class="card-body">
+            <h4 style="font-weight: 500;">Informasi</h4>
+            <hr>
+            <form action="/kontrak/baru" method="POST">
+              <input type="hidden" name="token" value="<%= token %>">
+
+              <div class="mb-4">
+                <label for="" class="form-label">Tahun</label>
+                <input type="number" name="tahun" id="" class="form-control" style="max-width: 220px;" value="<%= data.tahun %>">
+                <% if(errors) { %>
+                  <div class="text-danger mt-2 text-sm">
+                    <%= errors.tahun %>
+                  </div>
+                <% } %>
+              </div>
+
+              <div class="mb-4">
+                <label for="" class="form-label">Basket</label>
+                <select name="basket" id="" class="form-control" style="max-width: 220px;">
+                  <option value="">Pilih basket</option>
+                  <option value="1">1</option>
+                  <option value="2">2</option>
+                  <option value="3">3</option>
+                </select>
+                <% if(errors) { %>
+                  <div class="text-danger mt-2 text-sm">
+                    <%= errors.basket %>
+                  </div>
+                <% } %>
+              </div>
+
+              <div class="mb-4">
+                <label for="" class="form-label">Pilih Pengadaan</label>
+                <select class="form-select" name="pengadaan_id" id="pengadaan-select2" data-placeholder="Pilih Pengadaan"></select>
+                <% if(errors) { %>
+                  <div class="text-danger mt-2 text-sm">
+                    <%= errors.pengadaan_id %>
+                  </div>
+                <% } %>
+              </div>
+
+              <div class="mb-4">
+                <label for="" class="form-label">Nomor Kontrak</label>
+                <input type="text" class="form-control" name="nomor_kontrak">
+                <% if(errors) { %>
+                  <div class="text-danger mt-2 text-sm">
+                    <%= errors.nomor_kontrak %>
+                  </div>
+                <% } %>
+              </div>
+
+              <div class="mb-4">
+                <label for="" class="form-label">Tanggal Kontrak</label>
+                <input type="date" name="tanggal_kontrak" id="" class="form-control">
+                <% if(errors) { %>
+                  <div class="text-danger mt-2 text-sm">
+                    <%= errors.tanggal_kontrak %>
+                  </div>
+                <% } %>
+              </div>
+
+              <div class="mb-4">
+                <label for="" class="form-label">Tanggal Awal</label>
+                <input type="date" name="tanggal_awal" id="" class="form-control">
+                <% if(errors) { %>
+                  <div class="text-danger mt-2 text-sm">
+                    <%= errors.tanggal_awal %>
+                  </div>
+                <% } %>
+              </div>
+
+              <div class="mb-4">
+                <label for="" class="form-label">Tanggal Akhir</label>
+                <input type="date" name="tanggal_akhir" id="" class="form-control">
+                <% if(errors) { %>
+                  <div class="text-danger mt-2 text-sm">
+                    <%= errors.tanggal_akhir %>
+                  </div>
+                <% } %>
+              </div>
+
+              <div class="mb-4">
+                <label for="" class="form-label">Pelaksana</label>
+                <input type="text" name="pelaksana" id="" class="form-control">
+                <% if(errors) { %>
+                  <div class="text-danger mt-2 text-sm">
+                    <%= errors.pelaksana %>
+                  </div>
+                <% } %>
+              </div>
+
+              <div class="mb-4">
+                <label for="" class="form-label">Direksi</label>
+                <select name="direksi" id="" class="form-control" style="max-width: 220px;">
+                  <option value="">Pilih Direksi</option>
+                  <option value="perencanaan">Perencanaan</option>
+                  <option value="konstruksi" >Konstruksi</option>
+                  <option value="jaringan">Jaringan</option>
+                  <option value="traksaksi_energi">Transaksi Energi</option>
+                  <option value="niaga">Niaga</option>
+                  <option value="pemasaran">Pemasaran</option>
+                  <option value="keuangan_dan_umum">Keuangan dan Umum</option>
+                  <option value="k3l">K3L</option>
+                </select>
+                <% if(errors) { %>
+                  <div class="text-danger mt-2 text-sm">
+                    <%= errors.status %>
+                  </div>
+                <% } %>
+              </div>
+
+              <div class="mb-4">
+                <label for="" class="form-label">Tipe</label>
+                <select name="type" id="" class="form-control" style="max-width: 220px;">
+                  <option value="">Pilih tipe</option>
+                  <option value="murni" >Murni</option>
+                  <option value="turunan" >Turunan</option>
+                </select>
+                <% if(errors) { %>
+                  <div class="text-danger mt-2 text-sm">
+                    <%= errors.type %>
+                  </div>
+                <% } %>
+              </div>
+
+              <hr>
+
+              <div class="d-flex justify-content-end">
+                <button class="btn btn-dark">Simpan</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <%- include("../_script") %>
+    <script>
+      $(document).ready(function() {
+        $('#pengadaan-select2').select2({
+          theme: "bootstrap-5",
+          width: $( this ).data( 'width' ) ? $( this ).data( 'width' ) : $( this ).hasClass( 'w-100' ) ? '100%' : 'style',
+          placeholder: $( this ).data( 'placeholder' ),
+          ajax: {
+            url: '/pengadaan/json',
+            data: function (params) {
+              var query = {
+                search: params.term,
+                type: 'public'
+              }
+              return query;
+            },
+            processResults: function (data) {
+              return {
+                results: data.data.map(function (item) {
+                  return {
+                    id: item._id,
+                    text: item.nodin
+                  }
+                })
+              };
+            }
+          }
+        });
+      })
+    </script>
+  </div>
+</body>
+
+</html>

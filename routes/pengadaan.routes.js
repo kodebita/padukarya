@@ -11,9 +11,9 @@ const pengadaanCatatanController = require("../controllers/pengadaan-catatan.con
 const pengadaanValidation = require("../validations/pengadaan.validation");
 
 router.get("/", pengadaanController.getPengadaan);
+router.get("/json", pengadaanController.getPengadaanJson);
 router.get("/baru", pengadaanController.createPengadaan);
 router.post("/baru", pengadaanValidation.validatePengadaan, pengadaanController.storePengadaan);
-
 router.get("/:id", pengadaanController.getPengadaanById);
 router.get("/:id/hapus", pengadaanController.deletePengadaanById);
 

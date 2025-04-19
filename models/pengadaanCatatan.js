@@ -1,7 +1,6 @@
 const mongoose = require("mongoose");
 
 const pengadaanCatatanSchema = new mongoose.Schema({
-  user_id: String,
   catatan: String,
   user_id: mongoose.ObjectId,
   pengadaan_id: mongoose.ObjectId,

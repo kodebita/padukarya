@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>
+    <%= title %> | PaduKarya
+  </title>
+  <%- include("../../../_style") %>
+</head>
+
+<body>
+  <div id="main-wrapper" data-theme="light" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full" data-sidebar-position="fixed" data-header-position="fixed" data-boxed-layout="full">
+    <%- include("../../../_header") %>
+    <%- include("../../../_sidebar", {page: 'kontrak'}) %>
+    <%- include("../../../_toast") %>
+
+    <div class="page-wrapper">
+      <%- include("../_breadcrumb", {title: "Amandemen Kontrak", kontrak: kontrak}) %>
+      
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-3">
+            <%- include('../_sidebar', {page: 'amandemen'}) %>
+          </div>
+          <div class="col-9">
+            <div class="card">
+              <div class="card-body">
+                <h4 style="font-weight: 500;">Amandemen Kontrak</h4>
+                <hr>
+                <% if(!kontrak.is_amandemen) { %>
+                  <form action="/kontrak/<%= kontrak._id %>/amandemen" method="POST">
+                    <input type="hidden" name="token" value="<%= token %>">
+      
+                    <div class="mb-4">
+                      <label for="" class="form-label">Versi Amandemen</label>
+                      <input type="text" name="versi_amandemen" id="" class="form-control" style="max-width: 320px;" placeholder="Masukkan versi amandemen">
+                      <% if(errors) { %>
+                        <div class="text-danger mt-2 text-sm">
+                          <%= errors.versi_amandemen %>
+                        </div>
+                      <% } %>
+                    </div>
+
+                    <p class="text-sm text-muted"><em><i class="bi bi-info-circle text-primary"></i> Dengan menginput versi amandemen, mode amandemen akan aktif pada halaman Informasi Project, RAB Jasa, RAB Material hingga Anda menekan tombol Simpan Amandemen.</em></p>
+      
+                    <hr>
+      
+                    <div class="d-flex justify-content-end">
+                      <button class="btn btn-dark">Simpan</button>
+                    </div>
+                  </form>
+                <% } else { %>
+                  <div>
+                    <p>Amandemen sedang aktif. Klik tombol <q><u>Selesai Amandemen</u></q> jika sudah selesai. Klik tombol <q><u>Batalkan Amandemen</u></q> untuk mengembalikan data sebelum dilakukan amandemen.</p>
+      
+                    <hr>
+      
+                    <div class="d-flex justify-content-end">
+                      <a href="/kontrak/<%= kontrak._id %>/amandemen/batal">
+                        <button class="btn btn-danger me-2" style="background-color: #ff4f70;">Batalkan Amandemen</button>
+                      </a>
+                      <a href="/kontrak/<%= kontrak._id %>/amandemen/selesai">
+                        <button class="btn btn-dark">Selesai Amandemen</button>
+                      </a>
+                    </div>
+                  </div>
+                <% } %>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <%- include("../../../_script") %>
+  </div>
+</body>
+
+</html>

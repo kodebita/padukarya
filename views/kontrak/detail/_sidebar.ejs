@@ -1,33 +1,34 @@
 
 <ul class="list-group border-0">
   <li class="list-group-item border-0 <% if(page == 'detail') { %> active <% } %>">
-    <a href="/pengadaan/<%= pengadaan._id %>">
+    <a href="/kontrak/<%= kontrak._id %>">
       <i class="bi bi-info-circle me-1"></i> Informasi
     </a>
   </li>
-  <li class="list-group-item border-0 <% if(page == 'prk') { %> active <% } %>">
-    <a href="/pengadaan/<%= pengadaan._id %>/prk">
-      <i class="bi bi-journal-album me-1"></i> List PRK
-    </a>
-  </li>
-  <li class="list-group-item ms-4 border-0 <% if(page == 'jasa') { %> active <% } %>">
-    <a href="/pengadaan/<%= pengadaan._id %>/jasa">
+  <li class="list-group-item border-0 <% if(page == 'jasa') { %> active <% } %>">
+    <a href="/kontrak/<%= kontrak._id %>/jasa">
       <i class="bi bi-tools me-1"></i> RAB Jasa
     </a>
   </li>
-  <li class="list-group-item ms-4 border-0 <% if(page == 'material') { %> active <% } %>">
-    <a href="/pengadaan/<%= pengadaan._id %>/material">
+  <li class="list-group-item border-0 <% if(page == 'material') { %> active <% } %>">
+    <a href="/kontrak/<%= kontrak._id %>/material">
       <i class="bi bi-lightbulb me-1"></i> RAB Material
     </a>
   </li>
   <li class="list-group-item border-0 <% if(page == 'lampiran') { %> active <% } %>">
-    <a href="/pengadaan/<%= pengadaan._id %>/lampiran">
+    <a href="/kontrak/<%= kontrak._id %>/lampiran">
       <i class="bi bi-paperclip me-1"></i> Lampiran
     </a>
   </li>
   <li class="list-group-item border-0 <% if(page == 'catatan') { %> active <% } %>">
-    <a href="/pengadaan/<%= pengadaan._id %>/catatan">
+    <a href="/kontrak/<%= kontrak._id %>/catatan">
       <i class="bi bi-chat-dots me-1"></i> Catatan
     </a>
+  </li>
+  <li class="list-group-item border-0 <% if(page == 'amandemen') { %> active <% } %> d-flex justify-content-between">
+    <a href="/kontrak/<%= kontrak._id %>/amandemen" class="w-100">
+      <i class="bi bi-pencil-square me-1"></i> Amandemen
+    </a>
+    <% if(kontrak.is_amandemen) { %> <i class="bi bi-hourglass-split ms-auto"></i> <% } %>
   </li>
 </ul>
